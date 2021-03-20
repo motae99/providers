@@ -5,12 +5,12 @@ import Toast from 'react-native-toast-message';
 
 import {View, Text} from 'react-native';
 
-import codePush from 'react-native-code-push';
-const codePushOptions = {
-  updateDialog: true,
-  checkFrequency: codePush.CheckFrequency.ON_APP_START,
-  installMode: codePush.InstallMode.IMMEDIATE,
-};
+// import codePush from 'react-native-code-push';
+// const codePushOptions = {
+//   updateDialog: true,
+//   checkFrequency: codePush.CheckFrequency.ON_APP_START,
+//   installMode: codePush.InstallMode.IMMEDIATE,
+// };
 
 const App = ({props}) => {
   return (
@@ -22,14 +22,12 @@ const App = ({props}) => {
           backgroundColor: 'green',
           flex: 1,
         }}>
-        <Text style={{color: 'white'}}>
-          Update Now this is a simple fix for now
-        </Text>
+        <Text style={{color: 'white'}}>Provider App no data</Text>
       </View>
       <Toast ref={ref => Toast.setRef(ref)} />
     </SafeAreaProvider>
   );
 };
 
-export default codePush(codePushOptions)(App);
-// export default App;
+// export default codePush(codePushOptions)(App);
+export default App;

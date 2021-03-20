@@ -27,6 +27,12 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+
+      <!-- fbsdk metadata -->
+      <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+      <!-- fbsdk metadata -->
+
+      
         <!-- Google maps -->
       <!-- You will only need to add this meta-data tag, but make sure it's a child of application -->
    <meta-data

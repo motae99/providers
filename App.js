@@ -5,12 +5,12 @@ import Toast from 'react-native-toast-message';
 
 import {View, Text} from 'react-native';
 
-// import codePush from 'react-native-code-push';
-// const codePushOptions = {
-//   updateDialog: true,
-//   checkFrequency: codePush.CheckFrequency.ON_APP_START,
-//   installMode: codePush.InstallMode.IMMEDIATE,
-// };
+import codePush from 'react-native-code-push';
+const codePushOptions = {
+  updateDialog: true,
+  checkFrequency: codePush.CheckFrequency.ON_APP_START,
+  installMode: codePush.InstallMode.IMMEDIATE,
+};
 
 const App = ({props}) => {
   return (
@@ -29,5 +29,5 @@ const App = ({props}) => {
   );
 };
 
-// export default codePush(codePushOptions)(App);
-export default App;
+export default codePush(codePushOptions)(App);
+// export default App;

@@ -1,0 +1,21 @@
+{
+ "compilerOptions": {
+   "baseUrl": ".",
+   "paths": {
+    "*": ["src/*"],
+     "assets": ["src/assets/*"],
+     "img": ["src/assets/img/*"],
+     "lottie": ["src/assets/lottie/*"],
+    "api": ["src/api/*"],
+    "components": ["src/components/*"],
+    "constants": ["src/constants/*"],
+    "navigation": ["src/navigation/*"],
+    "stacks": ["src/stacks/*"],
+    "auth": ["src/stacks/auth/*"],
+    "social": ["src/stacks/social/*"],
+     "reducers": ["src/reducers/*"],
+     "styles": ["src/styles/*"],
+     "utils": ["src/utils/*"],
+   }
+ }
+}

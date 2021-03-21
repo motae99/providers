@@ -19,7 +19,7 @@ const App = ({props}) => {
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: 'green',
+          backgroundColor: 'red',
           flex: 1,
         }}>
         <Text style={{color: 'white'}}>Provider App no data</Text>

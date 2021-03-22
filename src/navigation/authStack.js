@@ -12,10 +12,11 @@ const Stack = createStackNavigator();
 const AuthStack = () => {
   return (
     <Stack.Navigator headerMode={'none'}>
+      <Stack.Screen name="SignUp" component={SignUp} />
+
       <Stack.Screen name="Introd" component={Introd} />
       <Stack.Screen name="Phone" component={Phone} />
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="SignUp" component={SignUp} />
     </Stack.Navigator>
   );
 };

@@ -17,7 +17,7 @@ GoogleSignin.configure({
   offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
 });
 
-const AuthContextProvider = (props) => {
+const AuthContextProvider = props => {
   const [confirm, setConfirm] = useState(null);
   const [phoneNo, setPhoneNo] = useState('');
   const [User, setUser] = React.useState(null);
@@ -28,7 +28,7 @@ const AuthContextProvider = (props) => {
   // const [signUp, setSignUp] = React.useState(false);
 
   function createNewUser(userInfo) {
-    return firestore().collection('users').doc(userInfo.uid).set(userInfo);
+    return firestore().collection('providers').doc(userInfo.uid).set(userInfo);
   }
 
   function connectProvider(newData) {
@@ -38,12 +38,12 @@ const AuthContextProvider = (props) => {
   }
 
   function onAuthStateChanged(user) {
-    setUser(user);  
+    setUser(user);
   }
 
   useEffect(() => {
     const subscriber = firestore()
-      .collection('users')
+      .collection('providers')
       .doc(User?.uid)
       .onSnapshot(documentSnapshot => {
         if (documentSnapshot.exists) {
@@ -80,33 +80,20 @@ const AuthContextProvider = (props) => {
     // }
   };
 
-  const signUp = async ({
-    email,
-    password,
-    name,
-    gender,
-    photoURL,
-    firstName,
-    lastName,
-  }) => {
+  const signUp = async ({serviceType, email, password, phone, name}) => {
+    setPhoneNo(phone);
     return auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(async (authUser) => {
+      .then(async authUser => {
         if (authUser.additionalUserInfo.isNewUser) {
           const {user} = authUser;
-          console.log('context SignUp auth done', user);
-          const profileImage = await Storage(photoURL, user.uid);
-
           const userInfo = {
             uid: user.uid,
             displayName: name,
-            firstName: firstName,
-            lastName: lastName,
-            gender: gender,
-            phoneNumber: null,
+            serviceType: serviceType,
+            phoneNumber: phone,
             email: user.email,
             emailVerified: user.emailVerified,
-            photoURL: profileImage,
             currentProfile: 'password',
             providerData: user.providerData,
           };
@@ -118,12 +105,14 @@ const AuthContextProvider = (props) => {
       .then(async () => {
         const update = {
           displayName: name,
-          photoURL: photoURL,
         };
 
         await auth().currentUser.updateProfile(update);
       })
-      .catch((error) => {
+      .then(async () => {
+        await connectPhone(phone);
+      })
+      .catch(error => {
         if (error.code === 'auth/operation-not-allowed') {
           console.log('Enable anonymous in your firebase console.');
         }
@@ -144,7 +133,7 @@ const AuthContextProvider = (props) => {
     // Sign-in the user with the credential
     return auth()
       .signInWithCredential(googleCredential)
-      .then((authUser) => {
+      .then(authUser => {
         if (authUser.additionalUserInfo.isNewUser) {
           const {user, additionalUserInfo} = authUser;
           const userInfo = {
@@ -165,7 +154,7 @@ const AuthContextProvider = (props) => {
           createNewUser(userInfo);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.code === 'auth/operation-not-allowed') {
           console.log('Enable anonymous in your firebase console.');
         }
@@ -200,7 +189,7 @@ const AuthContextProvider = (props) => {
     );
     return auth()
       .signInWithCredential(facebookCredential)
-      .then((authUser) => {
+      .then(authUser => {
         if (authUser.additionalUserInfo.isNewUser) {
           const {user, additionalUserInfo} = authUser;
           const userInfo = {
@@ -221,7 +210,7 @@ const AuthContextProvider = (props) => {
           createNewUser(userInfo);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.code === 'auth/operation-not-allowed') {
           console.log('Enable anonymous in your firebase console.');
         }
@@ -237,7 +226,7 @@ const AuthContextProvider = (props) => {
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
     return auth()
       .currentUser.linkWithCredential(googleCredential)
-      .then((connectGoogleData) => {
+      .then(connectGoogleData => {
         const {user, additionalUserInfo} = connectGoogleData;
         const googleData = {
           google: true,
@@ -246,7 +235,7 @@ const AuthContextProvider = (props) => {
         };
         connectProvider(googleData);
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.code === 'auth/operation-not-allowed') {
           console.log('Enable anonymous in your firebase console.');
         }
@@ -276,7 +265,7 @@ const AuthContextProvider = (props) => {
 
     return auth()
       .currentUser.linkWithCredential(facebookCredential)
-      .then((connectFacebookData) => {
+      .then(connectFacebookData => {
         const {user, additionalUserInfo} = connectFacebookData;
         const facebookData = {
           facebook: true,
@@ -285,7 +274,7 @@ const AuthContextProvider = (props) => {
         };
         connectProvider(facebookData);
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.code === 'auth/operation-not-allowed') {
           console.log('Enable anonymous in your firebase console.');
         }
@@ -294,13 +283,13 @@ const AuthContextProvider = (props) => {
       });
   };
 
-  const connectPhone = async (phoneNumber) => {
+  const connectPhone = async phoneNumber => {
     setPhoneNo(phoneNumber);
     return auth()
       .verifyPhoneNumber(phoneNumber)
       .on(
         'state_changed',
-        (phoneAuthSnapshot) => {
+        phoneAuthSnapshot => {
           switch (phoneAuthSnapshot.state) {
             case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
               console.log('code sent');
@@ -335,7 +324,7 @@ const AuthContextProvider = (props) => {
               break;
           }
         },
-        (error) => {
+        error => {
           console.log(error);
           Toast.show({
             type: 'error',
@@ -348,7 +337,7 @@ const AuthContextProvider = (props) => {
             // bottomOffset: 40,
           });
         },
-        (phoneAuthSnapshot) => {
+        phoneAuthSnapshot => {
           console.log(phoneAuthSnapshot);
           setConfirm(phoneAuthSnapshot);
         },
@@ -357,7 +346,7 @@ const AuthContextProvider = (props) => {
     // setConfirm(snapshot);
   };
 
-  const verifyConnectPhone = async (userCode) => {
+  const verifyConnectPhone = async userCode => {
     const credential = firebase.auth.PhoneAuthProvider.credential(
       confirm.verificationId,
       userCode,
@@ -373,7 +362,7 @@ const AuthContextProvider = (props) => {
           const phoneData = {phoneNumber: phoneNo};
           connectProvider(phoneData);
         })
-        .catch((error) => console.log(error));
+        .catch(error => console.log(error));
       Toast.show({
         text1: I18n.t('ToastSuccessNumberConnectedTitle'),
         text2: I18n.t('ToastSuccessNumberConnectedSubTitle'),
@@ -398,7 +387,7 @@ const AuthContextProvider = (props) => {
     }
   };
 
-  const phoneSign = async (phoneNumber) => {
+  const phoneSign = async phoneNumber => {
     setPhoneNo(phoneNumber);
 
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
@@ -413,7 +402,7 @@ const AuthContextProvider = (props) => {
     setConfirm(confirmation);
   };
 
-  const phoneVerify = async (userCode) => {
+  const phoneVerify = async userCode => {
     // console.log('Verifying', userCode);
     try {
       await confirm.confirm(userCode);

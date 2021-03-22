@@ -7,18 +7,22 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Facebook from 'components/buttons/facebook';
 import Google from 'components/buttons/google';
 import Phone from 'components/buttons/phone';
+import PhoneScreen from 'auth/phone';
 import Animated from 'react-native-reanimated';
 import ProfileImage from 'components/profileImage';
+// import EventProvider from 'components/eventProvider';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
 
 import HomeStack from 'navigation/homeStack';
@@ -156,10 +160,11 @@ function CustomDrawerContent({progress, ...rest}) {
 
 const Drawer = createDrawerNavigator();
 
-export default function App() {
-  const {dbUser, signOut} = React.useContext(AuthContext);
+export default function App({navigation}) {
+  const {dbUser, signOut, User} = React.useContext(AuthContext);
+  // signOut();
+
   if (!dbUser) {
-    // signOut();
     return (
       <View
         style={{
@@ -172,18 +177,68 @@ export default function App() {
       </View>
     );
   }
+
+  if (!User.phoneNumber) {
+    return <PhoneScreen />;
+  }
+
+  if (!dbUser.registered) {
+    // if (dbUser.serviceType === 'Events') {
+    //   return <EventProvider />;
+    // }
+    if (dbUser.serviceType === 'Beauty') {
+      <View
+        style={{
+          backgroundColor: 'blue',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flex: 1,
+        }}>
+        <Text style={{color: 'white'}}>
+          this is beauty provider registeration screen
+        </Text>
+      </View>;
+    }
+  }
+
+  if (dbUser.status === 'inActive') {
+    // signOut();
+    return (
+      <View
+        style={{
+          backgroundColor: 'red',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flex: 1,
+        }}>
+        <Text style={{color: 'white'}}>
+          your application is under process awaiting your account activation
+        </Text>
+      </View>
+    );
+  }
+
   return (
-    <Drawer.Navigator
-      initialRouteName="HomeStack"
-      drawerStyle={{
-        backgroundColor: '#F8F8FD',
-        width: 320,
-      }}
-      drawerContent={(props) => <CustomDrawerContent {...props} />}>
-      <Drawer.Screen name="HomeStack" component={HomeStack} />
-      {/* <Drawer.Screen name="Language" component={Language} />
-      <Drawer.Screen name="Vouchers" component={Vouchers} /> */}
-    </Drawer.Navigator>
+    // <Drawer.Navigator
+    //   initialRouteName="HomeStack"
+    //   drawerStyle={{
+    //     backgroundColor: '#F8F8FD',
+    //     width: 320,
+    //   }}
+    //   drawerContent={props => <CustomDrawerContent {...props} />}>
+    //   <Drawer.Screen name="HomeStack" component={HomeStack} />
+    //   {/* <Drawer.Screen name="Language" component={Language} />
+    //   <Drawer.Screen name="Vouchers" component={Vouchers} /> */}
+    // </Drawer.Navigator>
+    <View
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'gray',
+        flex: 1,
+      }}>
+      <Text style={{color: 'white'}}>you can add services now</Text>
+    </View>
   );
 }
 

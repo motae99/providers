@@ -41,5 +41,11 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://www.jitpack.io' }
+
+// <!-- image corp picker -->
+
+        maven { url 'https://maven.google.com' }
+// <!-- image corp picker -->
+
     }
 }

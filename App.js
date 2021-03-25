@@ -16,6 +16,7 @@ const App = ({props}) => {
   return (
     <SafeAreaProvider>
       <Navigator />
+
       <Toast ref={ref => Toast.setRef(ref)} />
     </SafeAreaProvider>
   );

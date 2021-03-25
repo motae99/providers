@@ -8,8 +8,8 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  Picker,
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import {Button, CheckBox, ButtonGroup} from 'react-native-elements';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Formik} from 'formik';

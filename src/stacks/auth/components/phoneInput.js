@@ -8,7 +8,9 @@ import {AuthContext} from 'context/authContext';
 import I18n from 'utils/i18n';
 
 const App = ({navigation}) => {
-  const {phoneSign, User, connectPhone} = React.useContext(AuthContext);
+  const {phoneSign, User, connectPhone, phoneNo} = React.useContext(
+    AuthContext,
+  );
 
   const [value, setValue] = useState('');
   const [countryCode, setCountryCode] = useState('');

@@ -71,6 +71,15 @@ const AuthContextProvider = props => {
     setPhoneNo(phone);
     return auth()
       .createUserWithEmailAndPassword(email, password)
+      .then(async () => {
+        await connectPhone(phone);
+      })
+      .then(async () => {
+        const update = {
+          displayName: name,
+        };
+        await auth().currentUser.updateProfile(update);
+      })
       .then(async authUser => {
         if (authUser.additionalUserInfo.isNewUser) {
           const {user} = authUser;
@@ -84,20 +93,8 @@ const AuthContextProvider = props => {
             currentProfile: 'password',
             providerData: user.providerData,
           };
-          console.log('authUser now', userInfo);
-
           createNewUser(userInfo);
         }
-      })
-      .then(async () => {
-        const update = {
-          displayName: name,
-        };
-
-        await auth().currentUser.updateProfile(update);
-      })
-      .then(async () => {
-        await connectPhone(phone);
       })
       .catch(error => {
         if (error.code === 'auth/operation-not-allowed') {

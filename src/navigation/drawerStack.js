@@ -16,7 +16,7 @@ import {
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
 import firestore from '@react-native-firebase/firestore';
-import Tabs from 'navigation/tabs'
+import Tabs from 'navigation/tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import EventProvider from 'stacks/events/eventProvider';
@@ -27,12 +27,32 @@ import Animated from 'react-native-reanimated';
 import ProfileImage from 'components/profileImage';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
 
-import HomeStack from 'navigation/homeStack';
+import Phone from 'auth/phone';
 import {AuthContext} from 'context/authContext';
 import ProviderContextProvider from 'context/providerContext';
 
 const Stack = createSharedElementStackNavigator();
 
+const AddEventProvider = () => {
+  return (
+    <ProviderContextProvider>
+      <Stack.Navigator headerMode={'none'}>
+        <Stack.Screen name="EventProvider" component={EventProvider} />
+      </Stack.Navigator>
+    </ProviderContextProvider>
+  );
+};
+
+const AddEventServices = () => {
+  return (
+    <ProviderContextProvider>
+      <Stack.Navigator headerMode={'none'}>
+        <Stack.Screen name="EventServices" component={EventServices} />
+        <Stack.Screen name="Unverified" component={Unverified} />
+      </Stack.Navigator>
+    </ProviderContextProvider>
+  );
+};
 
 function CustomDrawerContent({progress, ...rest}) {
   const {signOut, dbUser} = React.useContext(AuthContext);
@@ -109,8 +129,6 @@ function CustomDrawerContent({progress, ...rest}) {
           </TouchableNativeFeedback>
         </View>
 
-       
-
         <View
           // elevation={6}
           style={{
@@ -162,8 +180,11 @@ export default function App() {
     return () => subscriber();
   }, [dbUser]);
 
+  if (!User.phoneNumber) {
+    return <Phone />;
+  }
+
   if (!dbUser) {
-    // signOut();
     return (
       <View
         style={{
@@ -178,22 +199,11 @@ export default function App() {
   }
 
   if (!eventProvider) {
-    <ProviderContextProvider>
-      <Stack.Navigator headerMode={'none'}>
-        <Stack.Screen name="EventProvider" component={EventProvider} />
-      </Stack.Navigator>
-    </ProviderContextProvider>;
+    return <AddEventProvider />;
   }
 
   if (eventProvider && !eventProvider.verified) {
-    return (
-      <ProviderContextProvider>
-        <Stack.Navigator headerMode={'none'}>
-          <Stack.Screen name="EventServices" component={EventServices} />
-          <Stack.Screen name="Unverified" component={Unverified} />
-        </Stack.Navigator>
-      </ProviderContextProvider>
-    );
+    return <AddEventServices />;
   }
 
   return (
@@ -203,10 +213,10 @@ export default function App() {
         backgroundColor: '#F8F8FD',
         width: 320,
       }}
-      drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="Tabs" component={Tabs} />
-      {/* <Drawer.Screen name="Language" component={Language} />
-      <Drawer.Screen name="Vouchers" component={Vouchers} /> */}
+      <Drawer.Screen name="Edit" component={AddEventProvider} />
+      <Drawer.Screen name="Services" component={AddEventServices} />
     </Drawer.Navigator>
   );
 }

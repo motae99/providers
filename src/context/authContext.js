@@ -65,19 +65,6 @@ const AuthContextProvider = props => {
 
   const signIn = async ({email, password}) => {
     return auth().signInWithEmailAndPassword(email, password);
-    // try {
-    //   // const response =
-    //   await auth().signInWithEmailAndPassword(username, password);
-    //   // if (response.user.uid) {
-    //   //   const {uid} = response.user;
-    //   //   response.user.updateProfile({desplayName: name});
-    //   //   const userData = {email, name, uid};
-    //   //   await firestore().collection('users').doc(uid).set(userData);
-    //   //   // this.props.navigation.navigate('App');
-    //   // }
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
 
   const signUp = async ({serviceType, email, password, phone, name}) => {

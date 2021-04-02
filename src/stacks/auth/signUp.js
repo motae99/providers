@@ -14,9 +14,9 @@ import {Button, CheckBox, ButtonGroup} from 'react-native-elements';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import FormInput from 'auth/components/formInput';
-import FormButton from 'auth/components/formButton';
-import ErrorMessage from 'auth/components/errorMessage';
+import FormInput from 'components/formInput';
+import FormButton from 'components/formButton';
+import ErrorMessage from 'components/errorMessage';
 import PhoneInput from 'react-native-phone-number-input';
 
 import {AuthContext} from 'context/authContext';
@@ -24,7 +24,14 @@ import I18n from 'utils/i18n';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
 
 const {width, height} = Dimensions.get('window');
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
 const validationSchema = Yup.object().shape({
+  // phoneNumber: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+  phoneNumber: Yup.string()
+    .label(I18n.t('signUpNameLabel'))
+    .required(I18n.t('signUpNameRequiredError'))
+    .min(2, I18n.t('signUpNameError')),
   name: Yup.string()
     .label(I18n.t('signUpNameLabel'))
     .required(I18n.t('signUpNameRequiredError'))
@@ -66,38 +73,6 @@ const SignUp = ({navigation}) => {
   const [disabled, setDisabled] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
 
-  // const [services, setServices] = useState([]);
-  // const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   try {
-  //     const unsubscribe = firestore()
-  //       .collection('services')
-  //       .onSnapshot(querySnapshot => {
-  //         if (querySnapshot) {
-  //           const AllServices = querySnapshot.docs.map(documentSnapshot => {
-  //             return {
-  //               ...documentSnapshot.data(),
-  //               key: documentSnapshot.id,
-  //             };
-  //           });
-  //           if (AllServices && AllServices.length > 0) {
-  //             // console.log(AllServices);
-  //             setServices(AllServices);
-  //           }
-
-  //           if (loading) {
-  //             setLoading(false);
-  //           }
-  //         }
-  //       });
-
-  //     return () => unsubscribe();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, [loading]);
-
   const handlePasswordVisibility = () => {
     passwordIcon === 'ios-eye'
       ? setPasswordIcon('ios-eye-off')
@@ -113,8 +88,8 @@ const SignUp = ({navigation}) => {
   };
 
   const handleOnSignup = async (values, actions) => {
-    const {name, email, password} = values;
-
+    const {name, email, password, phoneNumber} = values;
+    // console.log('phoneNumber', phoneNumber);
     try {
       let signed = await signUp({name, email, password, serviceType, phone});
       if (signed) {
@@ -135,21 +110,23 @@ const SignUp = ({navigation}) => {
           name: '',
           email: '',
           password: '',
+          phoneNumber: '',
           confirmPassword: '',
           check: false,
         }}
         onSubmit={async (values, actions) => {
-          const checkValid = phoneInput.current?.isValidNumber(value);
-          // setShowMessage(true);
-          setValid(checkValid ? checkValid : false);
-          setCountryCode(phoneInput.current?.getCountryCode() || '');
-          let getNumberAfterPossiblyEliminatingZero = await phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
-          // console.log(getNumberAfterPossiblyEliminatingZero);
-          let addNumber = getNumberAfterPossiblyEliminatingZero.formattedNumber;
-          setPhone(addNumber);
-          if (valid) {
-            handleOnSignup(values, actions);
-          }
+          // const checkValid = phoneInput.current?.isValidNumber(value);
+          // // setShowMessage(true);
+          // setValid(checkValid ? checkValid : false);
+          // setCountryCode(phoneInput.current?.getCountryCode() || '');
+          // let getNumberAfterPossiblyEliminatingZero = await phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
+          // // console.log(getNumberAfterPossiblyEliminatingZero);
+          // let addNumber = getNumberAfterPossiblyEliminatingZero.formattedNumber;
+          // setPhone(addNumber);
+          // if (valid) {
+          //   handleOnSignup(values, actions);
+          // }
+          handleOnSignup(values, actions);
         }}
         validationSchema={validationSchema}>
         {({
@@ -206,29 +183,18 @@ const SignUp = ({navigation}) => {
             />
             <ErrorMessage errorValue={touched.name && errors.name} />
 
-            <PhoneInput
-              ref={phoneInput}
-              defaultValue={value}
-              placeholder={I18n.t('phoneInputPlaceHolder')}
-              containerStyle={styles.phoneContainer}
-              textContainerStyle={styles.textContainer}
-              flagButtonStyle={styles.flagButton}
-              textInputStyle={styles.textInputStyle}
-              countryPickerButtonStyle={styles.countryPickerButtonStyle}
-              defaultCode="SD"
-              layout="first"
-              onChangeText={text => {
-                setValue(text);
-              }}
-              onChangeFormattedText={text => {
-                setFormattedValue(text);
-                setCountryCode(phoneInput.current?.getCountryCode() || '');
-              }}
-              countryPickerProps={{withAlphaFilter: true}}
-              disabled={disabled}
-              // disableArrowIcon
-              // withShadow
-              // autoFocus
+            <FormInput
+              name="phoneNumber"
+              // keyboardType="number-pad"
+              value={values.phoneNumber}
+              onChangeText={handleChange('phoneNumber')}
+              placeholder="Phone Number"
+              iconName="phone"
+              iconColor="#2C384A"
+              onBlur={handleBlur('phoneNumber')}
+            />
+            <ErrorMessage
+              errorValue={touched.phoneNumber && errors.phoneNumber}
             />
 
             <FormInput

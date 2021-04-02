@@ -1,10 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, Fragment, useRef, useContext} from 'react';
 import {
   Text,
   View,
   TouchableOpacity,
   Dimensions,
-  Modal,
   StyleSheet,
 } from 'react-native';
 import Select2 from 'react-native-select-two';
@@ -20,23 +20,19 @@ import * as Yup from 'yup';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
 
 import Files from 'components/files';
-import FormInput from 'auth/components/formInput';
-import FormButton from 'auth/components/formButton';
-import ErrorMessage from 'auth/components/errorMessage';
-import AddressMap from 'components/adress';
-import geohash from 'ngeohash';
+import FormInput from 'components/formInput';
+import FormButton from 'components/formButton';
+import ErrorMessage from 'components/errorMessage';
 
-import {UserContext} from 'context/authContext';
+import AddressModal from 'components/addressModal';
+import {AuthContext} from 'context/authContext';
+import {ProviderContext} from 'context/providerContext';
 
 import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
 const {width, height} = Dimensions.get('window');
-
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0122;
 
 const styles = StyleSheet.create({
   container: {
@@ -69,7 +65,11 @@ const validationSchema = Yup.object().shape({
   address: Yup.string()
     .label('Full address')
     .required()
-    .min(10, 'Must have at least 10 characters'),
+    .min(5, 'Must have at least 10 characters'),
+  hallName: Yup.string()
+    .label('hallName')
+    .required()
+    .min(5, 'Must have at least 10 characters'),
   capacity: Yup.number()
     .label('capacity')
     .required('capacity of your place')
@@ -98,65 +98,28 @@ const validationSchema = Yup.object().shape({
   // check: Yup.boolean().oneOf([true], "Please check the agreement")
 });
 
-export default function () {
-  const childRef = useRef();
-  const {User} = useContext(UserContext);
+const EventProvider = () => {
+  const {User, dbUser} = useContext(AuthContext);
+  const {
+    images,
+    coordinate,
+    uploadLoap,
+    setModal,
+    region,
+    Address,
+    geoPoint,
+  } = useContext(ProviderContext);
 
-  if (!User) {
-    // show custom error message to tell user should be loged in
-    // actions.setFieldError('general', error.message);
-    return <Text>Login Plz ya Amouna by adding PartyHall Provider</Text>;
-  }
-
-  const [perc, setPerc] = useState();
-  const [images, setImages] = useState(null);
-  const [uploadingTotal, setUpladingTotal] = useState(null);
-  const [uploadingProg, setUploadingProg] = useState(null);
-  const [dynamicIndex, setDynamicIndex] = useState(null);
-
-  const [modal, setModal] = useState(false);
-  const [Address, setAddress] = useState(null);
-  const [geoPoint, setgeoPoint] = useState(null);
-  const [geoHash, setgeoHash] = useState(null);
-  const [coordinate, setcoordinate] = useState(null);
-  const [region, setRegion] = useState(null);
   const [workingDays, addWorkingDays] = useState([]);
   const [eBooking, setEBooking] = useState(false);
   const [nBooking, setNBooking] = useState(false);
-
-  const uploadPhotoAsync = async (uri, uid) => {
-    const fileExt = uri.split('.').pop();
-    const path = `photos/${uid}/${Date.now()}.${fileExt}`;
-    const putFile = uri.replace('file:///', '/');
-    return new Promise(async (res, rej) => {
-      let upload = storage().ref(path).putFile(putFile);
-      upload.on(
-        storage.TaskEvent.STATE_CHANGED,
-        snapshot => {
-          console.log(snapshot.bytesTransferred);
-          console.log(snapshot.totalBytes);
-          var percentage = snapshot.bytesTransferred / snapshot.totalBytes;
-          setPerc(percentage);
-          if (snapshot.state === storage.TaskState.SUCCESS) {
-            console.log('upload completed ');
-          }
-        },
-        err => {
-          rej(err);
-        },
-        async () => {
-          const url = await storage().ref(path).getDownloadURL();
-          res(url);
-        },
-      );
-    });
-  };
 
   const handleonAdd = async (values, actions) => {
     console.log(values);
 
     const {
       workingDays,
+      hallName,
       address,
       capacity,
       nAmount,
@@ -173,7 +136,7 @@ export default function () {
         return actions.setSubmitting(false);
       }
 
-      if (Evening && eAmount == '') {
+      if (Evening && eAmount === '') {
         // show custom error message to tell images must be added
         actions.setFieldError(
           'eAmount',
@@ -182,7 +145,7 @@ export default function () {
         actions.setSubmitting(false);
         return null;
       }
-      if (Night && nAmount == '') {
+      if (Night && nAmount === '') {
         // show custom error message to tell images must be added
         actions.setFieldError(
           'nAmount',
@@ -201,21 +164,7 @@ export default function () {
       }
 
       if (images) {
-        setUpladingTotal(images.length);
-
-        for (let i = 0; i < images.length; i++) {
-          const image = images[i];
-          setUploadingProg(i);
-          setDynamicIndex(i);
-          childRef.current.downButtonHandler();
-          var remoteUri = await uploadPhotoAsync(image.uri, User.uid);
-          let localImages = [...images];
-          image.uri = remoteUri;
-          localImages[i] = image;
-          setImages(images);
-          setUploadingProg(i);
-        }
-        setUploadingProg(null);
+        await uploadLoap(User);
       } else {
         // show custom error message to tell images must be added
         actions.setFieldError('images', 'Pick your images');
@@ -224,6 +173,7 @@ export default function () {
       }
 
       const providerData = {
+        hallName,
         workingDays,
         address,
         capacity,
@@ -231,13 +181,17 @@ export default function () {
         eAmount,
         Night,
         Evening,
+        coordinate,
+        geoPoint,
         files: images,
+        services: [],
+        ownerId: User.uid,
       };
 
       await firestore()
-        .collection('Providers')
+        .collection('eventProviders')
         .doc(User.uid)
-        .update(providerData);
+        .set(providerData);
       // this.props.navigation.navigate('ProviderHome')
 
       actions.resetForm({});
@@ -251,55 +205,14 @@ export default function () {
     }
   };
 
-  const handleAddress = address => {
-    console.log(address);
-    const geoPoint = new firestore.GeoPoint(
-      address.latitude,
-      address.longitude,
-    );
-    var coordinate = {
-      latitude: address.latitude,
-      longitude: address.longitude,
-    };
-    var hash = geohash.encode(address.latitude, address.longitude);
-    setAddress(address.address);
-    setgeoHash(hash);
-    setcoordinate(coordinate);
-    setgeoPoint(geoPoint);
-    setRegion({
-      latitude: address.latitude,
-      longitude: address.longitude,
-      // latitudeDelta: address.latitudeDelta,
-      // longitudeDelta: address.longitudeDelta,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO,
-    });
-  };
-
-  const renderModal = () => {
-    return (
-      <Modal
-        animationType={'slide'}
-        transparent={false}
-        visible={modal}
-        onRequestClose={() => setModal(false)}>
-        <AddressMap
-          closeModal={() => setModal(false)}
-          notifyChange={address => {
-            handleAddress(address);
-          }}
-        />
-      </Modal>
-    );
-  };
-
   return (
     <SafeAreaView>
-      <ScrollView style={{marginHorizontal: 10, marginTop: 20}}>
+      <ScrollView style={{marginHorizontal: 20, marginTop: 20}}>
         <Formik
           initialValues={{
             workingDays: '',
-            address: '',
+            hallName: '',
+            address: Address,
             capacity: '',
             Evening: false,
             Night: false,
@@ -323,9 +236,26 @@ export default function () {
           }) => (
             <Fragment>
               <View style={{backgroundColor: 'white'}}>
+                <FormInput
+                  name="hallName"
+                  value={values.hallName}
+                  onChangeText={handleChange('hallName')}
+                  placeholder="Enter your hallName"
+                  leftIcon={
+                    <Entypo
+                      name="home"
+                      size={25}
+                      color={Colors.primary.brand}
+                    />
+                  }
+                  onBlur={handleBlur('address')}
+                />
+                <ErrorMessage
+                  errorValue={touched.hallName && errors.hallName}
+                />
                 <Select2
                   isSelectSingle={false}
-                  style={{borderRadius: 5, height: 40}}
+                  style={{borderRadius: 5, height: 80}}
                   popupTitle="Week Days"
                   title="Working Days"
                   listEmptyTitle="Pick your Days"
@@ -333,7 +263,7 @@ export default function () {
                   selectedTitleStyle={{color: Colors.primary.brand}}
                   buttonTextStyle={{color: Colors.primary.brand}}
                   buttonStyle={{borderRadius: 5}}
-                  colorTheme={Colors.secondry.brand}
+                  colorTheme={'#cfcfdd'}
                   cancelButtonText="Cancal"
                   selectButtonText="Add"
                   searchPlaceHolderText="Search"
@@ -356,7 +286,7 @@ export default function () {
                   style={{
                     height: 200,
                     borderRadius: 8,
-                    borderColor: Colors.secondry.brand,
+                    borderColor: '#cfcfdd',
                     borderWidth: 1,
                     justifyContent: 'center',
                   }}>
@@ -390,7 +320,7 @@ export default function () {
               ) : (
                 <View
                   style={{
-                    backgroundColor: Colors.secondry.brand,
+                    backgroundColor: '#cfcfdd',
                     height: 200,
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -449,11 +379,7 @@ export default function () {
                     width: '100%',
                   }}
                   checkedIcon={
-                    <Fontisto
-                      name="day-haze"
-                      size={25}
-                      color={Colors.secondry.brand}
-                    />
+                    <Fontisto name="day-haze" size={25} color={'#cfcfdd'} />
                   }
                   day-sunny
                   // iconType="material"
@@ -495,7 +421,7 @@ export default function () {
                     value={values.eAmount}
                     onChangeText={handleChange('eAmount')}
                     errorStyle={{color: 'red'}}
-                    // errorMessage="ENTER A VALID ERROR HERE"
+                    errorMessage="ENTER A VALID NUMBER HERE"
                   />
                   <ErrorMessage errorValue={errors.eAmount} />
                 </View>
@@ -564,17 +490,7 @@ export default function () {
                 </View>
               </View>
 
-              <Files
-                ref={childRef}
-                {...{
-                  perc,
-                  uploadingProg,
-                  uploadingTotal,
-                  dynamicIndex,
-                  images,
-                  setImages,
-                }}
-              />
+              <Files />
               <ErrorMessage errorValue={errors.images} />
 
               <View>
@@ -592,7 +508,9 @@ export default function () {
           )}
         </Formik>
       </ScrollView>
-      {renderModal()}
+      {AddressModal()}
     </SafeAreaView>
   );
-}
+};
+
+export default EventProvider;

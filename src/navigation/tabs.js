@@ -1,15 +1,54 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Category from 'stacks/home';
-import Social from 'social/index';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Foundation from 'react-native-vector-icons/Foundation';
 
+import Booking from 'stacks/events/booking';
+import Social from 'stacks/social';
+import Offers from 'stacks/offer';
 const Tab = createBottomTabNavigator();
 
 const BottomTabs = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Category" component={Category} />
-      <Tab.Screen name="Social" component={Social} />
+    <Tab.Navigator
+      initialRouteName="Offers"
+      tabBarOptions={{
+        activeTintColor: '#e91e63',
+      }}>
+      <Tab.Screen
+        name="Social"
+        component={Social}
+        options={{
+          tabBarLabel: 'Social',
+          tabBarIcon: ({color, size}) => (
+            <Foundation name="social-treehouse" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Offers"
+        component={Offers}
+        options={{
+          tabBarLabel: 'Offers',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="offer" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Booking"
+        component={Booking}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons
+              name="order-bool-descending-variant"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };

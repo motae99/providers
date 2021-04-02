@@ -16,9 +16,9 @@ import * as Yup from 'yup';
 import Video from 'react-native-video';
 import InkinWater from 'assets/InkinWater.mp4';
 import {AuthContext} from 'context/authContext';
-import FormInput from 'auth/components/formInput';
-import FormButton from 'auth/components/formButton';
-import ErrorMessage from 'auth/components/errorMessage';
+import FormInput from 'components/formInput';
+import FormButton from 'components/formButton';
+import ErrorMessage from 'components/errorMessage';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
 import I18n from 'utils/i18n';
 

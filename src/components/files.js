@@ -1,4 +1,5 @@
-import React, {forwardRef, useRef, useState, useImperativeHandle} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useRef, useState, useImperativeHandle} from 'react';
 import {
   TouchableOpacity,
   ScrollView,
@@ -14,11 +15,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
 
+import {ProviderContext} from 'context/providerContext';
+
 import Video from 'react-native-video';
 import * as Progress from 'react-native-progress';
 
 var ImagePicker = NativeModules.ImageCropPicker;
 const {width} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   filesContainer: {
     height: 304,
@@ -80,202 +84,214 @@ const styles = StyleSheet.create({
   },
 });
 
-const upload = forwardRef(
-  (
-    {perc, uploadingProg, uploadingTotal, dynamicIndex, images, setImages},
-    ref,
-  ) => {
-    const [indexArry, setIndexArry] = useState([]);
-    const scrollRef = useRef();
+const FileUpload = () => {
+  const {
+    perc,
+    uploadingProg,
+    uploadingTotal,
+    setIndexArry,
+    images,
+    setImages,
+    indexArry,
+    imagesRef,
+  } = React.useContext(ProviderContext);
 
-    useImperativeHandle(ref, () => ({
-      downButtonHandler() {
-        scrollRef.current.scrollTo({
-          x: indexArry[dynamicIndex],
-          y: 0,
-          animated: true,
-        });
-      },
-    }));
-
-    const pickMultiple = () => {
-      ImagePicker.openPicker({
-        multiple: true,
-        waitAnimationEnd: true,
-        includeExif: true,
-        forceJpg: true,
-      })
-        .then(images => {
-          var imagese = images.map(i => {
-            return {
-              uri: i.path,
-              width: i.width,
-              height: i.height,
-              mime: i.mime,
-            };
-          });
-          setImages(imagese);
-        })
-        .catch(e => alert(e));
-    };
-
-    const cleanupImages = () => {
-      ImagePicker.clean()
-        .then(() => {
-          console.log('removed tmp images from tmp directory');
-        })
-        .catch(e => {
-          alert(e);
-        });
-    };
-
-    const crop = image => {
-      var array = images;
-      var index = array.indexOf(image);
-
-      ImagePicker.openCropper({
-        path: image.uri,
-        width: 400,
-        height: 400,
-      })
-        .then(i => {
-          var newImage = {
+  const pickMultiple = () => {
+    ImagePicker.openPicker({
+      multiple: true,
+      waitAnimationEnd: true,
+      includeExif: true,
+      forceJpg: false,
+      // mediaType: 'video',
+    })
+      .then(images => {
+        var imagese = images.map(i => {
+          return {
             uri: i.path,
             width: i.width,
             height: i.height,
             mime: i.mime,
           };
-          array[index] = '';
-          setImages(array);
-          // console.log('received cropped image', image);
-        })
-        .catch(e => {
-          console.log(e);
-          Alert.alert(e.message ? e.message : e);
         });
-    };
+        setImages(imagese);
+      })
+      .catch(e => {
+        alert(e);
+        // console.log(e);
+      });
+  };
 
-    const cleanupSingleImage = file => {
-      console.log('selected file', file);
-      var array = [images];
-      var index = array.indexOf(file);
-      if (index !== -1) {
-        array.splice(index, 1);
+  // const pickMultiple = () => {
+  //   ImagePicker.openPicker({
+  //     mediaType: 'video',
+  //   })
+  //     .then(video => {
+  //       console.log(video);
+  //     })
+  //     .catch(e => {
+  //       alert(e);
+  //     });
+  // };
+
+  const cleanupImages = () => {
+    ImagePicker.clean()
+      .then(() => {
+        console.log('removed tmp images from tmp directory');
+      })
+      .catch(e => {
+        alert(e);
+      });
+  };
+
+  const crop = image => {
+    var array = images;
+    var index = array.indexOf(image);
+
+    ImagePicker.openCropper({
+      path: image.uri,
+      width: 400,
+      height: 400,
+    })
+      .then(i => {
+        var newImage = {
+          uri: i.path,
+          width: i.width,
+          height: i.height,
+          mime: i.mime,
+        };
+        array[index] = '';
         setImages(array);
-      }
-      ImagePicker.cleanSingle(file ? file.uri : null)
-        .then(() => {
-          console.log(`removed tmp image ${file.uri} from tmp directory`);
-        })
-        .catch(e => {
-          alert(e);
-        });
-    };
+        // console.log('received cropped image', image);
+      })
+      .catch(e => {
+        console.log(e);
+        Alert.alert(e.message ? e.message : e);
+      });
+  };
 
-    const renderVideo = video => {
-      console.log('rendering video');
-      console.log(video);
-      return (
-        <View style={{height: 300, width: 300}}>
-          <TouchableOpacity onLongPress={cleanupSingleImage(video)}>
-            <Video
-              source={{uri: video.uri, type: video.mime}}
-              rate={1}
-              paused={false}
-              volume={1}
-              muted={true}
-              resizeMode={'cover'}
-              onError={e => console.log('error this ', e)}
-              onLoad={load => console.log('loading this', load)}
-              repeat={true}
-            />
-          </TouchableOpacity>
-        </View>
-      );
-    };
+  const cleanupSingleImage = file => {
+    console.log('selected file', file);
+    var array = [images];
+    var index = array.indexOf(file);
+    if (index !== -1) {
+      array.splice(index, 1);
+      setImages(array);
+    }
+    ImagePicker.cleanSingle(file ? file.uri : null)
+      .then(() => {
+        console.log(`removed tmp image ${file.uri} from tmp directory`);
+      })
+      .catch(e => {
+        alert(e);
+      });
+  };
 
-    const renderImage = image => {
-      var array = images;
-      var index = array.indexOf(image);
-      return (
-        <View style={{height: 300, width: 300}}>
-          <Image style={styles.image} source={image} />
-          <TouchableOpacity
-            onPress={() => cleanupSingleImage(image)}
-            style={styles.delete}>
-            <Feather name="delete" size={24} color={Colors.secondary.brand} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => crop(image)} style={styles.edit}>
-            <Feather name="edit" size={24} color={Colors.secondary.brand} />
-          </TouchableOpacity>
-          {/* {(progressFile == image.index) ? ( */}
-          {index === uploadingProg ? (
-            <View style={styles.progressView}>
-              <Progress.Circle
-                style={styles.progress}
-                progress={perc}
-                // indeterminate={this.state.indeterminate} later
-                showsText={true}
-                size={100}
-                thickness={6}
-              />
-              <Text style={styles.progText}>
-                uploading {uploadingProg} out of {uploadingTotal}
-              </Text>
-            </View>
-          ) : null}
-        </View>
-      );
-    };
-
-    const renderAsset = image => {
-      if (image.mime && image.mime.toLowerCase().indexOf('video/') !== -1) {
-        return renderVideo(image);
-      }
-      return renderImage(image);
-    };
-
+  const renderVideo = video => {
+    console.log('rendering video');
+    console.log(video);
     return (
-      <View>
-        {images ? (
-          <TouchableOpacity style={styles.picker} onPress={pickMultiple}>
-            <Feather name="plus" size={25} color={Colors.secondary.brand} />
-          </TouchableOpacity>
-        ) : null}
-
-        <ScrollView horizontal ref={scrollRef}>
-          {images ? (
-            images.map((image, key) => (
-              <View
-                style={styles.filesContainer}
-                key={key}
-                onLayout={event => {
-                  const layout = event.nativeEvent.layout;
-                  indexArry[key] = layout.x;
-                  setIndexArry({...indexArry});
-                }}>
-                {renderAsset(image)}
-              </View>
-            ))
-          ) : (
-            <TouchableOpacity
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width,
-              }}
-              onPress={pickMultiple}>
-              <Ionicons
-                name="ios-images"
-                size={100}
-                color={Colors.secondary.brand}
-              />
-            </TouchableOpacity>
-          )}
-        </ScrollView>
+      <View style={{height: 300, width: 300}}>
+        <TouchableOpacity onLongPress={cleanupSingleImage(video)}>
+          <Video
+            source={{uri: video.uri, type: video.mime}}
+            rate={1}
+            paused={false}
+            volume={1}
+            muted={true}
+            resizeMode={'cover'}
+            onError={e => console.log('error this ', e)}
+            onLoad={load => console.log('loading this', load)}
+            repeat={true}
+          />
+        </TouchableOpacity>
       </View>
     );
-  },
-);
+  };
 
-export default upload;
+  const renderImage = image => {
+    var array = images;
+    var index = array.indexOf(image);
+    return (
+      <View style={{height: 300, width: 300}}>
+        <Image style={styles.image} source={image} />
+        <TouchableOpacity
+          onPress={() => cleanupSingleImage(image)}
+          style={styles.delete}>
+          <Feather name="delete" size={24} color={Colors.secondary.brand} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => crop(image)} style={styles.edit}>
+          <Feather name="edit" size={24} color={Colors.secondary.brand} />
+        </TouchableOpacity>
+        {/* {(progressFile == image.index) ? ( */}
+        {index === uploadingProg ? (
+          <View style={styles.progressView}>
+            <Progress.Circle
+              style={styles.progress}
+              progress={perc}
+              // indeterminate={this.state.indeterminate} later
+              showsText={true}
+              size={100}
+              thickness={6}
+            />
+            <Text style={styles.progText}>
+              uploading {uploadingProg} out of {uploadingTotal}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+    );
+  };
+
+  const renderAsset = image => {
+    if (image.mime && image.mime.toLowerCase().indexOf('video/') !== -1) {
+      return renderVideo(image);
+    }
+    return renderImage(image);
+  };
+
+  return (
+    <View>
+      {images ? (
+        <TouchableOpacity style={styles.picker} onPress={pickMultiple}>
+          <Feather name="plus" size={25} color={Colors.secondary.brand} />
+        </TouchableOpacity>
+      ) : null}
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        ref={imagesRef}>
+        {images ? (
+          images.map((image, key) => (
+            <View
+              style={styles.filesContainer}
+              key={key}
+              onLayout={event => {
+                const layout = event.nativeEvent.layout;
+                indexArry[key] = layout.x;
+                setIndexArry({...indexArry});
+              }}>
+              {renderAsset(image)}
+            </View>
+          ))
+        ) : (
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width,
+            }}
+            onPress={pickMultiple}>
+            <Ionicons
+              name="ios-images"
+              size={100}
+              color={Colors.secondary.brand}
+            />
+          </TouchableOpacity>
+        )}
+      </ScrollView>
+    </View>
+  );
+};
+
+export default FileUpload;

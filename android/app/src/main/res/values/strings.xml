@@ -2,6 +2,6 @@
     <string name="app_name">providers</string>
     <string name="facebook_app_id">944446699703585</string>
     <string name="fb_login_protocol_scheme">fb944446699703585</string>
-    <string name="googe_map_api_key">AIzaSyAiJZomZxOvuedI5Q5bATkcH3FWsljlhdo</string>
+    <string name="googe_map_api_key">AIzaSyDvHba5Tdo267-7666082W07iyVyv1pDEo</string>
     <string moduleConfig="true" name="CodePushDeploymentKey">y5khyzOwJRoxCgFdBQivW5lB8cmOQPCrBhtpB</string>
 </resources>

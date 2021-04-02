@@ -12,9 +12,13 @@ export default function SelectLocationScreen({notifyChange, closeModal}) {
           longitude: 78.4558341,
         }}
         onLocationSelect={address => {
+          console.log(address);
           notifyChange(address);
           closeModal();
         }}
+        actionText="pick"
+        actionButtonStyle={{backgroundColor: 'blue'}}
+        markerColor="blue"
       />
     </View>
   );

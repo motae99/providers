@@ -48,7 +48,7 @@ export default ({list, service}) => {
     try {
       const unsubscribe = firestore()
         .collection('eventProviders')
-        .doc('EQfOKFQWmySSmJ3aXMPTF7lJDwq2')
+        .doc(`${eventProvider.ownerId}`)
         .collection(`${service}`)
         .onSnapshot(querySnapshot => {
           if (querySnapshot) {
@@ -69,7 +69,7 @@ export default ({list, service}) => {
     } catch (error) {
       console.log(error);
     }
-  }, [open, service]);
+  }, [eventProvider, service]);
 
   const transition = useTransition(open);
   const height = mix(

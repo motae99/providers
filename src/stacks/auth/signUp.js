@@ -89,9 +89,15 @@ const SignUp = ({navigation}) => {
 
   const handleOnSignup = async (values, actions) => {
     const {name, email, password, phoneNumber} = values;
-    // console.log('phoneNumber', phoneNumber);
+
     try {
-      let signed = await signUp({name, email, password, serviceType, phone});
+      let signed = await signUp({
+        name,
+        email,
+        password,
+        serviceType,
+        phoneNumber,
+      });
       if (signed) {
         navigation.navigate('Phone');
       }

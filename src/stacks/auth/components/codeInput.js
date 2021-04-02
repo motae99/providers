@@ -16,39 +16,11 @@ const App = () => {
 
   const onFulfill = code => {
     console.log('onFullfill', code);
-    // TODO: call API to check code here
-    // If code does not match, clear input with: this.refs.codeInputRef.clear()
-    // if (code === 123456) {
-    //   Alert.alert('Confirmation Code', 'Successful!', [{text: 'OK'}], {
-    //     cancelable: false,
-    //   });
-    // } else {
-    //   Alert.alert('Confirmation Code', 'Code not match!', [{text: 'OK'}], {
-    //     cancelable: false,
-    //   });
-
-    //   codeInputRef.clear();
-
-    // console.log(code);
-
-    // setVerify(code);
-    // }
   };
 
   const onFinishCheckingCode = isValid => {
     console.log('onFinish Validity', isValid);
     User ? verifyConnectPhone(isValid) : phoneVerify(isValid);
-
-    // if (!isValid) {
-    //   Alert.alert('Confirmation Code', 'Code not match!', [{text: 'OK'}], {
-    //     cancelable: false,
-    //   });
-    // } else {
-    //   setCode(code);
-    //   Alert.alert('Confirmation Code', 'Successful!', [{text: 'OK'}], {
-    //     cancelable: false,
-    //   });
-    // }
   };
 
   return (
@@ -163,39 +135,3 @@ const styles = StyleSheet.create({
 });
 
 export default App;
-
-// const onFulfill = (code) => {
-//  console.log('onFullfill', code);
-//  // TODO: call API to check code here
-//  // If code does not match, clear input with: this.refs.codeInputRef.clear()
-//  // if (code === 123456) {
-//  //   Alert.alert('Confirmation Code', 'Successful!', [{text: 'OK'}], {
-//  //     cancelable: false,
-//  //   });
-//  // } else {
-//  //   Alert.alert('Confirmation Code', 'Code not match!', [{text: 'OK'}], {
-//  //     cancelable: false,
-//  //   });
-
-//  //   codeInputRef.clear();
-
-//  // console.log(code);
-
-//  // setVerify(code);
-//  // }
-// };
-
-// const onFinishCheckingCode = (isValid, code) => {
-//  console.log('onFinish Validity', isValid);
-//  phoneVerify(isValid);
-//  // if (!isValid) {
-//  //   Alert.alert('Confirmation Code', 'Code not match!', [{text: 'OK'}], {
-//  //     cancelable: false,
-//  //   });
-//  // } else {
-//  //   setCode(code);
-//  //   Alert.alert('Confirmation Code', 'Successful!', [{text: 'OK'}], {
-//  //     cancelable: false,
-//  //   });
-//  // }
-// };

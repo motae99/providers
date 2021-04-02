@@ -71,14 +71,14 @@ export default ({service}) => {
     try {
       await firestore()
         .collection('eventProviders')
-        .doc('EQfOKFQWmySSmJ3aXMPTF7lJDwq2')
+        .doc(`${eventProvider.ownerId}`)
         .update({
           ['services']: arrayUnion,
         });
 
       await firestore()
         .collection('eventProviders')
-        .doc('EQfOKFQWmySSmJ3aXMPTF7lJDwq2')
+        .doc(`${eventProvider.ownerId}`)
         .collection(`${service}`)
         .add({name: serviceName, price, description, timestamp: Date.now()});
 

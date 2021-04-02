@@ -166,6 +166,7 @@ export default function App() {
   const {User, dbUser, signOut} = React.useContext(AuthContext);
 
   React.useEffect(() => {
+    // signOut();
     const subscriber = firestore()
       .collection('eventProviders')
       .doc(dbUser?.uid)
@@ -180,9 +181,9 @@ export default function App() {
     return () => subscriber();
   }, [dbUser]);
 
-  if (!User.phoneNumber) {
-    return <Phone />;
-  }
+  // if (User && !User.phoneNumber) {
+  //   return <Phone />;
+  // }
 
   if (!dbUser) {
     return (

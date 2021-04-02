@@ -67,42 +67,44 @@ const AuthContextProvider = props => {
     return auth().signInWithEmailAndPassword(email, password);
   };
 
-  const signUp = async ({serviceType, email, password, phone, name}) => {
-    setPhoneNo(phone);
-    return auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(async () => {
-        await connectPhone(phone);
-      })
-      .then(async () => {
-        const update = {
-          displayName: name,
-        };
-        await auth().currentUser.updateProfile(update);
-      })
-      .then(async authUser => {
-        if (authUser.additionalUserInfo.isNewUser) {
-          const {user} = authUser;
-          const userInfo = {
-            uid: user.uid,
-            displayName: name,
-            serviceType: serviceType,
-            phoneNumber: phone,
-            email: user.email,
-            emailVerified: user.emailVerified,
-            currentProfile: 'password',
-            providerData: user.providerData,
-          };
-          createNewUser(userInfo);
-        }
-      })
-      .catch(error => {
-        if (error.code === 'auth/operation-not-allowed') {
-          console.log('Enable anonymous in your firebase console.');
-        }
-
-        console.error(error);
-      });
+  const signUp = async ({serviceType, email, password, phoneNumber, name}) => {
+    // setPhoneNo(phoneNumber);
+    return (
+      auth()
+        .createUserWithEmailAndPassword(email, password)
+        // .then(async () => {
+        //   await connectPhone(phoneNumber);
+        // })
+        // .then(async () => {
+        //   const update = {
+        //     displayName: name,
+        //   };
+        //   await auth().currentUser.updateProfile(update);
+        // })
+        .then(async authUser => {
+          if (authUser.additionalUserInfo.isNewUser) {
+            const {user} = authUser;
+            const userInfo = {
+              uid: user.uid,
+              displayName: name,
+              serviceType: serviceType,
+              phoneNumber: phoneNumber,
+              email: user.email,
+              emailVerified: user.emailVerified,
+              currentProfile: 'password',
+              providerData: user.providerData,
+            };
+            createNewUser(userInfo);
+          }
+        })
+        .catch(error => {
+          if (error.code === 'auth/operation-not-allowed') {
+            console.log('Enable anonymous in your firebase console.');
+          }
+          console.log('error from signUp function');
+          console.error(error);
+        })
+    );
   };
 
   const googleSign = async () => {
@@ -336,9 +338,6 @@ const AuthContextProvider = props => {
       userCode,
     );
 
-    // return auth()
-    //   .currentUser.updatePhoneNumber(credential);
-
     try {
       await auth()
         .currentUser.updatePhoneNumber(credential)
@@ -454,68 +453,3 @@ const AuthContextProvider = props => {
 };
 
 export default AuthContextProvider;
-
-//   Toast.show({
-//     text1: I18n.t('ToastSuccessSignUpTitle'),
-//     text2: I18n.t('ToastSuccessSignUpSubTitle'),
-//     visibilityTime: 8000,
-//     autoHide: true,
-//     topOffset: 60,
-//   });
-// Toast.show({
-//   type: 'error',
-//   text1: I18n.t('ToastErrorSignUpTitle'),
-//   text2: error.message,
-//   // position: 'top | bottom',
-//   visibilityTime: 8000,
-//   autoHide: true,
-//   topOffset: 60,
-//   // bottomOffset: 40,
-// });
-
-// const verifyNumber = async (number) => {
-//   const requestedNo = await auth().verifyPhoneNumber(number)
-//           .on('state_changed', (phoneAuthSnapshot) => {
-//               console.log('State: ', phoneAuthSnapshot.state);
-//             }, (error) => {
-//               console.error(error);
-//             }, (phoneAuthSnapshot) => {
-//               console.log('Success');
-//             });
-// }
-
-// const credential = auth.PhoneAuthProvider.credential(snapshot.verificationId, code);
-// await auth().currentUser.updatePhoneNumber(credential);
-
-// // Successful login - onAuthStateChanged is triggered
-// auth().onAuthStateChanged( async (user) => {
-//     if (user) {
-//     // Stop the login flow / Navigate to next page
-//       // console.log('User info for provider: ', user);
-//       // console.log('+++++++++_____________========')
-//       this.setState({status: 'success'});
-//       const userData =  {
-//           uid: user.uid,
-//           timestamp: Date.now(),
-//           displayName: user.displayName,
-//           email: user.email,
-//           phoneNumber: user.phoneNumber,
-//           photoURL: user.photoURL,
-//         };
-//       try{
-//         await firestore()
-//         .collection('users')
-//         .doc(user.uid)
-//         .update(userData)
-//         setTimeout(() => { this.props.navigation.navigate('Initial') }, 1000)
-//       }
-//       catch(error){
-//         await firestore()
-//         .collection('users')
-//         .doc(user.uid)
-//         .set(userData)
-//         setTimeout(() => { this.props.navigation.navigate('Initial') }, 1000)
-//       }
-
-//     }
-//   });

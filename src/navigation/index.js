@@ -12,7 +12,6 @@ const AppStack = () => {
   const [initializing, setInitializing] = React.useState(true);
   const [User, setUser] = React.useState(null);
 
-  // Handle user state changes
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) {

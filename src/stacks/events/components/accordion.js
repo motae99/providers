@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
-  ScrollView,
   TouchableOpacity,
+  View,
+  Text,
+  ScrollView,
 } from 'react-native';
 // import {useNavigation} from 'react-navigation-hooks';
 import {ProviderContext} from 'context/providerContext';
@@ -30,7 +30,6 @@ export default () => {
   const {eventServices} = useContext(ProviderContext);
 
   // const [services, setServices] = useState(eventProvider.services);
-  console.log('eventServices', eventServices);
   return (
     <ScrollView style={styles.container}>
       <EventServices />
@@ -42,6 +41,8 @@ export default () => {
             return <List key={key} {...{service}} />;
           })
         : null}
+
+      <Text style={{color: 'black'}}>Verify me </Text>
     </ScrollView>
   );
 };

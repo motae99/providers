@@ -39,10 +39,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  logoContainer: {
-    marginBottom: 15,
-    alignItems: 'center',
-  },
   buttonContainer: {
     margin: 25,
   },
@@ -369,15 +365,17 @@ const EventProvider = () => {
                 onBlur={handleBlur('capacity')}
               />
               <ErrorMessage errorValue={touched.capacity && errors.capacity} />
-
+              {/*
               <View style={{justifyContent: 'center'}}>
                 <CheckBox
-                  containerStyle={{
-                    backgroundColor: '#fff',
-                    borderColor: '#fff',
-                    borderRadius: 5,
-                    width: '100%',
-                  }}
+                  // containerStyle={
+                  //   {
+                  //     // backgroundColor: '#fff',
+                  //     // borderColor: '#fff',
+                  //     // borderRadius: 5,
+                  //     // width: '100%',
+                  //   }
+                  // }
                   checkedIcon={
                     <Fontisto name="day-haze" size={25} color={'#cfcfdd'} />
                   }
@@ -429,12 +427,12 @@ const EventProvider = () => {
 
               <View style={{justifyContent: 'center'}}>
                 <CheckBox
-                  containerStyle={{
-                    backgroundColor: '#fff',
-                    borderColor: '#fff',
-                    borderRadius: 5,
-                    width: '100%',
-                  }}
+                  // containerStyle={{
+                  //   backgroundColor: '#fff',
+                  //   borderColor: '#fff',
+                  //   borderRadius: 5,
+                  //   width: '100%',
+                  // }}
                   checkedIcon={
                     <MIcon
                       name="weather-night"
@@ -488,7 +486,7 @@ const EventProvider = () => {
                   />
                   <ErrorMessage errorValue={errors.nAmount} />
                 </View>
-              </View>
+              </View> */}
 
               <Files />
               <ErrorMessage errorValue={errors.images} />

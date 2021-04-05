@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import Select2 from 'react-native-select-two';
-
+import StaticMap from 'components/staticMap'
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MapView, {Marker} from 'react-native-maps';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -62,8 +62,8 @@ const validationSchema = Yup.object().shape({
     .label('Full address')
     .required()
     .min(5, 'Must have at least 10 characters'),
-  hallName: Yup.string()
-    .label('hallName')
+  name: Yup.string()
+    .label('name')
     .required()
     .min(5, 'Must have at least 10 characters'),
   capacity: Yup.number()
@@ -71,27 +71,14 @@ const validationSchema = Yup.object().shape({
     .required('capacity of your place')
     .min(50)
     .max(1000),
+  evening: Yup.number()
+    .label('evening')
+    .required('evening cost is Required')
+    .min(50),
+  night: Yup.number().label('night').required('night cost is Required').min(50),
   workingDays: Yup.array()
     .of(Yup.string())
     .required('Required your working Days'),
-  Evening: Yup.boolean().oneOf([true, false], 'Please check'),
-  Night: Yup.boolean().oneOf([true, false], 'Please check'),
-  eAmount: Yup.number('Number Only'),
-  nAmount: Yup.number('Number Only'),
-
-  // nAmount: Yup.boolean().when('Night', {
-  //   is: true,
-  //   then: Yup.number().required('Night Amount is required.'),
-  // }),
-  // contactNo: Yup.string()
-  //   .label("contact No")
-  //   .required("Plaese submit comtact info")
-  //   .matches(phoneRegExp, "Phone number is not valid"),
-  // email: Yup.string()
-  //   .label("Email")
-  //   .email("Enter a valid email")
-  //   .required("Please enter a registered email"),
-  // check: Yup.boolean().oneOf([true], "Please check the agreement")
 });
 
 const EventProvider = () => {
@@ -113,44 +100,8 @@ const EventProvider = () => {
   const handleonAdd = async (values, actions) => {
     console.log(values);
 
-    const {
-      workingDays,
-      hallName,
-      address,
-      capacity,
-      nAmount,
-      eAmount,
-      Night,
-      Evening,
-    } = values;
+    const {workingDays, name, address, capacity, night, evening} = values;
     try {
-      if (!Night && !Evening) {
-        // show custom error message to tell images must be added
-        console.log('eather required');
-        actions.setFieldError('NightEvening', 'One must be set');
-
-        return actions.setSubmitting(false);
-      }
-
-      if (Evening && eAmount === '') {
-        // show custom error message to tell images must be added
-        actions.setFieldError(
-          'eAmount',
-          'Eveing is selected but amount is not set',
-        );
-        actions.setSubmitting(false);
-        return null;
-      }
-      if (Night && nAmount === '') {
-        // show custom error message to tell images must be added
-        actions.setFieldError(
-          'nAmount',
-          'Night is selected but amount is not set',
-        );
-        actions.setSubmitting(false);
-        return null;
-      }
-
       if (!coordinate) {
         // show custom error message to tell images must be added
 
@@ -169,14 +120,12 @@ const EventProvider = () => {
       }
 
       const providerData = {
-        hallName,
+        name,
         workingDays,
         address,
         capacity,
-        nAmount,
-        eAmount,
-        Night,
-        Evening,
+        night,
+        evening,
         coordinate,
         geoPoint,
         files: images,
@@ -207,13 +156,11 @@ const EventProvider = () => {
         <Formik
           initialValues={{
             workingDays: '',
-            hallName: '',
+            name: '',
             address: Address,
             capacity: '',
-            Evening: false,
-            Night: false,
-            eAmount: '',
-            nAmount: '',
+            evening: '',
+            night: '',
           }}
           onSubmit={(values, actions) => {
             handleonAdd(values, actions);
@@ -233,9 +180,9 @@ const EventProvider = () => {
             <Fragment>
               <View style={{backgroundColor: 'white'}}>
                 <FormInput
-                  name="hallName"
-                  value={values.hallName}
-                  onChangeText={handleChange('hallName')}
+                  name="name"
+                  value={values.name}
+                  onChangeText={handleChange('name')}
                   placeholder="Enter your hallName"
                   leftIcon={
                     <Entypo
@@ -244,11 +191,9 @@ const EventProvider = () => {
                       color={Colors.primary.brand}
                     />
                   }
-                  onBlur={handleBlur('address')}
+                  onBlur={handleBlur('name')}
                 />
-                <ErrorMessage
-                  errorValue={touched.hallName && errors.hallName}
-                />
+                <ErrorMessage errorValue={touched.name && errors.name} />
                 <Select2
                   isSelectSingle={false}
                   style={{borderRadius: 5, height: 80}}
@@ -365,128 +310,49 @@ const EventProvider = () => {
                 onBlur={handleBlur('capacity')}
               />
               <ErrorMessage errorValue={touched.capacity && errors.capacity} />
-              {/*
-              <View style={{justifyContent: 'center'}}>
-                <CheckBox
-                  // containerStyle={
-                  //   {
-                  //     // backgroundColor: '#fff',
-                  //     // borderColor: '#fff',
-                  //     // borderRadius: 5,
-                  //     // width: '100%',
-                  //   }
-                  // }
-                  checkedIcon={
-                    <Fontisto name="day-haze" size={25} color={'#cfcfdd'} />
-                  }
-                  day-sunny
-                  // iconType="material"
-                  uncheckedIcon={
-                    <Fontisto name="day-sunny" size={25} color="#f9c22e" />
-                  }
-                  title="Evening Booking"
-                  checkedTitle="Set Price"
-                  checked={values.Evening}
-                  onPress={() => {
-                    setFieldValue('Evening', !values.Evening);
-                    if (eBooking) {
-                      setEBooking(false);
-                      setFieldValue('eAmount', '');
-                    } else {
-                      setEBooking(true);
-                    }
-                  }}
-                />
-                <View
-                  style={{
-                    position: 'absolute',
-                    right: 5,
-                    width: width / 2,
-                    opacity: eBooking ? 1 : 0,
-                  }}>
-                  <Input
-                    disabled={!eBooking}
-                    placeholder="المبلغ"
+
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View style={{width: '45%'}}>
+                  <FormInput
+                    name="evening"
                     keyboardType="number-pad"
+                    value={values.evening}
+                    onChangeText={handleChange('evening')}
+                    placeholder="Evening amount"
                     leftIcon={
-                      <Ionicons
-                        name="ios-pricetags"
+                      <Fontisto
+                        name="day-sunny"
                         size={25}
                         color={Colors.primary.brand}
                       />
                     }
-                    // style={{fontFamily: StyleGuide.fontFamily}}
-                    value={values.eAmount}
-                    onChangeText={handleChange('eAmount')}
-                    errorStyle={{color: 'red'}}
-                    errorMessage="ENTER A VALID NUMBER HERE"
+                    onBlur={handleBlur('evening')}
                   />
-                  <ErrorMessage errorValue={errors.eAmount} />
+                  <ErrorMessage
+                    errorValue={touched.evening && errors.evening}
+                  />
+                </View>
+
+                <View style={{width: '45%'}}>
+                  <FormInput
+                    name="night"
+                    keyboardType="number-pad"
+                    value={values.night}
+                    onChangeText={handleChange('night')}
+                    placeholder="Night amount"
+                    leftIcon={
+                      <Fontisto
+                        name="night-clear"
+                        size={25}
+                        color={Colors.primary.brand}
+                      />
+                    }
+                    onBlur={handleBlur('night')}
+                  />
+                  <ErrorMessage errorValue={touched.night && errors.night} />
                 </View>
               </View>
-
-              <View style={{justifyContent: 'center'}}>
-                <CheckBox
-                  // containerStyle={{
-                  //   backgroundColor: '#fff',
-                  //   borderColor: '#fff',
-                  //   borderRadius: 5,
-                  //   width: '100%',
-                  // }}
-                  checkedIcon={
-                    <MIcon
-                      name="weather-night"
-                      size={25}
-                      color={Colors.primary.brand}
-                    />
-                  }
-                  day-sunny
-                  // iconType="material"
-                  uncheckedIcon={
-                    <Fontisto name="night-clear" size={25} color="#5d576b" />
-                  }
-                  title="Night Booking"
-                  checkedTitle="Set Price"
-                  checked={values.Night}
-                  onPress={() => {
-                    setFieldValue('Night', !values.Night);
-                    if (nBooking) {
-                      setNBooking(false);
-                      setFieldValue('nAmount', '');
-                    } else {
-                      setNBooking(true);
-                    }
-                  }}
-                />
-                <ErrorMessage errorValue={errors.NightEvening} />
-
-                <View
-                  style={{
-                    position: 'absolute',
-                    right: 5,
-                    width: width / 2,
-                    opacity: nBooking ? 1 : 0,
-                  }}>
-                  <Input
-                    disabled={!nBooking}
-                    placeholder="Amount"
-                    keyboardType="number-pad"
-                    leftIcon={
-                      <Ionicons
-                        name="ios-pricetags"
-                        size={25}
-                        color={Colors.primary.brand}
-                      />
-                    }
-                    style={styles}
-                    value={values.nAmount}
-                    onChangeText={handleChange('nAmount')}
-                    errorStyle={{color: 'red'}}
-                    // errorMessage="ENTER A VALID ERROR HERE"
-                  />
-                  <ErrorMessage errorValue={errors.nAmount} />
-                </View>
-              </View> */}
 
               <Files />
               <ErrorMessage errorValue={errors.images} />

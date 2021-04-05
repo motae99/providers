@@ -58,9 +58,9 @@ function CustomDrawerContent({progress, ...rest}) {
   const {signOut, dbUser} = React.useContext(AuthContext);
   const ripple = TouchableNativeFeedback.Ripple('#55DAEA', false);
 
-  const translateY = Animated.interpolate(progress, {
+  const translateX = Animated.interpolate(progress, {
     inputRange: [0, 1],
-    outputRange: [900, 0],
+    outputRange: [300, 0],
   });
 
   return (
@@ -81,7 +81,7 @@ function CustomDrawerContent({progress, ...rest}) {
       </View>
       <Animated.View
         style={{
-          transform: [{translateY}],
+          transform: [{translateX}],
           marginTop: 150,
           paddingTop: 150,
           borderTopLeftRadius: 60,

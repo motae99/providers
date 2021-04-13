@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import Select2 from 'react-native-select-two';
-import StaticMap from 'components/staticMap'
+import StaticMap from 'components/staticMap';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MapView, {Marker} from 'react-native-maps';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -57,6 +57,13 @@ const daysData = [
   {id: 'Fri', name: 'Fri'},
 ];
 
+const facility = [
+  {id: 'wifi', name: 'wifi'}, // set default checked for render option item
+  {id: 'parkingArea', name: 'Parking Area'},
+  {id: 'outdoorPlace', name: 'Outdoor Place'},
+  {id: 'restingArea', name: 'Resting Area'},
+];
+
 const validationSchema = Yup.object().shape({
   address: Yup.string()
     .label('Full address')
@@ -94,13 +101,22 @@ const EventProvider = () => {
   } = useContext(ProviderContext);
 
   const [workingDays, addWorkingDays] = useState([]);
+  const [facilities, addFacilities] = useState([]);
   const [eBooking, setEBooking] = useState(false);
   const [nBooking, setNBooking] = useState(false);
 
   const handleonAdd = async (values, actions) => {
     console.log(values);
 
-    const {workingDays, name, address, capacity, night, evening} = values;
+    const {
+      facilities,
+      workingDays,
+      name,
+      address,
+      capacity,
+      night,
+      evening,
+    } = values;
     try {
       if (!coordinate) {
         // show custom error message to tell images must be added
@@ -128,6 +144,7 @@ const EventProvider = () => {
         evening,
         coordinate,
         geoPoint,
+        facilities,
         files: images,
         services: [],
         ownerId: User.uid,
@@ -141,7 +158,6 @@ const EventProvider = () => {
 
       actions.resetForm({});
       actions.setStatus({success: true});
-      // navigate('Info');
     } catch (error) {
       console.log(error);
       actions.setFieldError('general', error.message);
@@ -194,6 +210,7 @@ const EventProvider = () => {
                   onBlur={handleBlur('name')}
                 />
                 <ErrorMessage errorValue={touched.name && errors.name} />
+
                 <Select2
                   isSelectSingle={false}
                   style={{borderRadius: 5, height: 80}}
@@ -355,7 +372,36 @@ const EventProvider = () => {
               </View>
 
               <Files />
+
               <ErrorMessage errorValue={errors.images} />
+
+              <Select2
+                isSelectSingle={false}
+                style={{borderRadius: 5, height: 80}}
+                popupTitle="Facility"
+                title="facilities"
+                listEmptyTitle="Pick available facilities"
+                // defaultFontName=''
+                selectedTitleStyle={{color: Colors.primary.brand}}
+                buttonTextStyle={{color: Colors.primary.brand}}
+                buttonStyle={{borderRadius: 5}}
+                colorTheme={'#cfcfdd'}
+                cancelButtonText="Cancal"
+                selectButtonText="Add"
+                searchPlaceHolderText="Search"
+                data={facility}
+                onSelect={data => {
+                  addFacilities(data);
+                  setFieldValue('facilities', data);
+                }}
+                onRemoveItem={data => {
+                  addFacilities(data);
+                  setFieldValue('facilities', data);
+                }}
+              />
+              <ErrorMessage
+                errorValue={touched.facilities && errors.facilities}
+              />
 
               <View>
                 <FormButton

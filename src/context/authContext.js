@@ -20,8 +20,8 @@ GoogleSignin.configure({
 const AuthContextProvider = props => {
   const [confirm, setConfirm] = useState(null);
   const [phoneNo, setPhoneNo] = useState('');
-  const [User, setUser] = React.useState(null);
-  const [dbUser, setDbUser] = React.useState(null);
+  const [User, setUser] = useState(null);
+  const [dbUser, setDbUser] = useState(null);
 
   const [uploadProgress, setUploadProgress] = useState(null);
 

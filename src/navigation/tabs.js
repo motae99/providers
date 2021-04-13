@@ -13,7 +13,7 @@ const Tab = createBottomTabNavigator();
 const BottomTabs = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Offers"
+      initialRouteName="Booking"
       tabBarOptions={{
         activeTintColor: '#e91e63',
       }}>

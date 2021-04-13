@@ -6,10 +6,12 @@ export default function SelectLocationScreen({notifyChange, closeModal}) {
   return (
     <View style={{flex: 1}}>
       <LocationView
-        apiKey={'AIzaSyCx60-3gx-i-UgRKTSErDhX7ZEmvb_yo5c'}
+        // AIzaSyDyFvsbn8_16j33qqKcYRyYSkQb71OlkJ4 // Hatim key
+        // AIzaSyCx60-3gx-i-UgRKTSErDhX7ZEmvb_yo5c // My Key
+        apiKey={'AIzaSyDyFvsbn8_16j33qqKcYRyYSkQb71OlkJ4'}
         initialLocation={{
-          latitude: 17.3940222,
-          longitude: 78.4558341,
+          latitude: 15.570526415687535,
+          longitude: 32.546177983344954,
         }}
         onLocationSelect={address => {
           console.log(address);

@@ -1218,6 +1218,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-11.1.2.tgz#f313c7edb9f38a700b4ce3b82b4873bd489667f6"
   integrity sha512-YAaOrSkx9BNZkWJWXBwFkWzVRo9JKFwz/AQsMx9ubi+4L/Amrj4ICfB7Pjvq98tvE/Zpv3fuiTeX2FU/j2KEUA==
 
+"@react-native-firebase/dynamic-links@^11.0.0":
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-11.2.0.tgz#4bb5a521509734fc18fcdf747ac14dd8897e6e25"
+  integrity sha512-Fa3GxVtjNGm5oRS1pZbaCh2hhuwXe5lDi0Jm0SLPKj0OcHNsjB7h1NJGxV3x2LHWsxwCOhfe2l3pE1iiqC78ZQ==
+
 "@react-native-firebase/firestore@^11.0.0":
   version "11.1.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-11.1.2.tgz#57a759b96f6727e35a3f4d33e0ebb1d085a0ca95"
@@ -1400,6 +1405,11 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
+
+"@types/geojson@^7946.0.7":
+  version "7946.0.7"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.7.tgz#c8fa532b60a0042219cdf173ca21a975ef0666ad"
+  integrity sha512-wE2v81i4C4Ol09RtsWFAqg3BUitWbHSpSlIo+bNdsCJijO9sjme+zm+73ZMCa/qMC8UEERxzGbvmr1cffo2SiQ==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
@@ -6760,10 +6770,11 @@ react-native-location-view@^0.3.0:
     prop-types "^15.6.0"
     react-native-simple-events "^1.0.1"
 
-react-native-maps@^0.27.1:
-  version "0.27.1"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.27.1.tgz#2f10cd417bb2fd938c9e015b1c9b6d9b1a44b97f"
-  integrity sha512-HygBkZBecTnIVRYrSiLRAvu4OmXOYso/A7c6Cy73HkOh9CgGV8Ap5eBea24tvmFGptjj5Hg8AJ94/YbmWK1Okw==
+"react-native-maps@git+https://github.com/react-native-community/react-native-maps.git":
+  version "0.28.0"
+  resolved "git+https://github.com/react-native-community/react-native-maps.git#e6e7b8176ae5d1b0daae354f8ca0b9d4cd5873c8"
+  dependencies:
+    "@types/geojson" "^7946.0.7"
 
 react-native-modal@^11.7.0:
   version "11.7.0"

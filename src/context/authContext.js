@@ -6,8 +6,11 @@ import firestore from '@react-native-firebase/firestore';
 import {LoginManager, AccessToken} from 'react-native-fbsdk';
 import {GoogleSignin} from '@react-native-community/google-signin';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-community/async-storage';
+
 import I18n from 'utils/i18n';
 import Storage from 'api/storage';
+import {DataTable} from 'react-native-paper';
 export const AuthContext = createContext();
 
 GoogleSignin.configure({
@@ -22,6 +25,7 @@ const AuthContextProvider = props => {
   const [phoneNo, setPhoneNo] = useState('');
   const [User, setUser] = useState(null);
   const [dbUser, setDbUser] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const [uploadProgress, setUploadProgress] = useState(null);
 
@@ -31,24 +35,43 @@ const AuthContextProvider = props => {
     return firestore().collection('providers').doc(userInfo.uid).set(userInfo);
   }
 
+  async function checkToken(data) {
+    const fcmToken = await AsyncStorage.getItem('fcmToken');
+
+    if (!data.fcmToken) {
+      return firestore().collection('users').doc(userId).update({
+        fcmToken: fcmToken,
+      });
+    }
+
+    if (data.fcmToken === fcmToken) {
+      return firestore().collection('users').doc(userId).update({
+        fcmToken: fcmToken,
+      });
+    }
+    return null;
+  }
+
   function connectProvider(newData) {
-    console.log('it should be PhoneNumber now', newData);
+    // console.log('it should be PhoneNumber now', newData);
     const updatedUser = {...dbUser, ...newData};
     return firestore().collection('users').doc(dbUser.uid).update(updatedUser);
   }
 
   function onAuthStateChanged(user) {
     setUser(user);
+    setUserId(user.uid);
   }
 
   useEffect(() => {
     const subscriber = firestore()
       .collection('providers')
-      .doc(User?.uid)
+      .doc(userId)
       .onSnapshot(documentSnapshot => {
         if (documentSnapshot.exists) {
-          // console.log('User data: ', documentSnapshot.data());
-          setDbUser(documentSnapshot.data());
+          const data = documentSnapshot.data();
+          checkToken(data);
+          setDbUser(data);
         } else {
           setDbUser(null);
         }
@@ -56,7 +79,8 @@ const AuthContextProvider = props => {
 
     // Stop listening for updates when no longer required
     return () => subscriber();
-  }, [User]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);

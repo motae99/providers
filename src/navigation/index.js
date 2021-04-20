@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {View, Text} from 'react-native';
@@ -7,6 +7,12 @@ import AuthStack from 'navigation/authStack';
 import DrawerStack from 'navigation/drawerStack';
 
 import AuthContextProvider from 'context/authContext';
+
+export const navigationRef = React.createRef();
+
+export function navigate(name, params) {
+  navigationRef.current?.navigate(name, params);
+}
 
 const AppStack = () => {
   const [initializing, setInitializing] = React.useState(true);

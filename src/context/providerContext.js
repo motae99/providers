@@ -62,7 +62,6 @@ const ProviderContextProvider = props => {
       .doc(dbUser?.uid)
       .onSnapshot(documentSnapshot => {
         if (documentSnapshot.exists) {
-          // console.log('User data: ', documentSnapshot.data());
           setEventProvider(documentSnapshot.data());
         } else {
           setEventProvider(null);

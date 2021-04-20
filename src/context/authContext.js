@@ -39,13 +39,13 @@ const AuthContextProvider = props => {
     const fcmToken = await AsyncStorage.getItem('fcmToken');
 
     if (!data.fcmToken) {
-      return firestore().collection('users').doc(userId).update({
+      return firestore().collection('providers').doc(userId).update({
         fcmToken: fcmToken,
       });
     }
 
-    if (data.fcmToken === fcmToken) {
-      return firestore().collection('users').doc(userId).update({
+    if (data.fcmToken !== fcmToken) {
+      return firestore().collection('providers').doc(userId).update({
         fcmToken: fcmToken,
       });
     }
@@ -60,7 +60,9 @@ const AuthContextProvider = props => {
 
   function onAuthStateChanged(user) {
     setUser(user);
-    setUserId(user.uid);
+    if (user) {
+      setUserId(user.uid);
+    }
   }
 
   useEffect(() => {
@@ -70,6 +72,8 @@ const AuthContextProvider = props => {
       .onSnapshot(documentSnapshot => {
         if (documentSnapshot.exists) {
           const data = documentSnapshot.data();
+          // console.log(data);
+
           checkToken(data);
           setDbUser(data);
         } else {

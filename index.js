@@ -12,5 +12,4 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
 });
 
-// next Do headless
 AppRegistry.registerComponent(appName, () => App);

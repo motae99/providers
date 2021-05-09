@@ -8,12 +8,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import Select2 from 'react-native-select-two';
-import StaticMap from 'components/staticMap';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MapView, {Marker} from 'react-native-maps';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Button, Input, CheckBox} from 'react-native-elements';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -29,6 +27,7 @@ import {AuthContext} from 'context/authContext';
 import {ProviderContext} from 'context/providerContext';
 
 import firestore from '@react-native-firebase/firestore';
+import * as geofirestore from 'geofirestore';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -97,7 +96,6 @@ const EventProvider = () => {
     setModal,
     region,
     Address,
-    geoPoint,
   } = useContext(ProviderContext);
 
   const [workingDays, addWorkingDays] = useState([]);
@@ -135,6 +133,11 @@ const EventProvider = () => {
         return null;
       }
 
+      const GeoFirestore = geofirestore.initializeApp(firestore());
+
+      // Create a GeoCollection reference
+      const geocollection = GeoFirestore.collection('eventProviders');
+
       const providerData = {
         name,
         workingDays,
@@ -142,18 +145,17 @@ const EventProvider = () => {
         capacity,
         night,
         evening,
-        coordinate,
-        geoPoint,
+        coordinates: new firestore.GeoPoint(
+          coordinate.latitude,
+          coordinate.longitude,
+        ),
         facilities,
         files: images,
         services: [],
         ownerId: User.uid,
       };
 
-      await firestore()
-        .collection('eventProviders')
-        .doc(User.uid)
-        .set(providerData);
+      await geocollection.doc(User.uid).set(providerData);
       // this.props.navigation.navigate('ProviderHome')
 
       actions.resetForm({});

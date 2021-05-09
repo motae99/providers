@@ -49,12 +49,6 @@ const Services = () => {
     let body = '';
     let alertBtns = [];
 
-    // Update a users messages list using AsyncStorage
-    // const currentMessages = await AsyncStorage.getItem('messages');
-    // const messageArray = JSON.parse(currentMessages);
-    // messageArray.push(remoteMessage.data);
-    // await AsyncStorage.setItem('messages', JSON.stringify(messageArray));
-
     if (remoteMessage) {
       RootNavigation.navigate('EventList');
       if (remoteMessage.notification) {
@@ -73,7 +67,6 @@ const Services = () => {
           }
         }
 
-        // Notification arrive while the app is running in foreground
         if (!fromBackground && remoteMessage.data.msgType) {
           switch (remoteMessage.data.msgType) {
             case 'Search':

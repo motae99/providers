@@ -4,8 +4,8 @@ import {View, Text} from 'react-native';
 
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-// import Navigator from 'navigation';
-// import Services from 'utils/services';
+import Navigator from 'navigation';
+import Services from 'utils/services';
 
 import codePush from 'react-native-code-push';
 const codePushOptions = {
@@ -17,8 +17,8 @@ const codePushOptions = {
 const App = ({props}) => {
   return (
     <SafeAreaProvider>
-      {/* <Services /> */}
-      <View
+      <Services />
+      {/* <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
@@ -28,8 +28,8 @@ const App = ({props}) => {
         <Text style={{color: 'white'}}>
           Update Now this is a simple fix for now
         </Text>
-      </View>
-      {/* <Navigator /> */}
+      </View> */}
+      <Navigator />
 
       <Toast ref={ref => Toast.setRef(ref)} />
     </SafeAreaProvider>

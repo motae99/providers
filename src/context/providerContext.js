@@ -1,8 +1,6 @@
 import React, {createContext, useState, useRef, useEffect} from 'react';
 import {Dimensions} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import geohash from 'ngeohash';
-// import Storage from 'api/storage';
 import storage from '@react-native-firebase/storage';
 import {AuthContext} from 'context/authContext';
 
@@ -29,8 +27,6 @@ const ProviderContextProvider = props => {
   const [dynamicIndex, setDynamicIndex] = useState(null);
   const [modals, setModal] = useState(false);
   const [Address, setAddress] = useState('');
-  const [geoPoint, setgeoPoint] = useState(null);
-  const [geoHash, setgeoHash] = useState(null);
   const [coordinate, setcoordinate] = useState(null);
   const [region, setRegion] = useState(null);
 
@@ -71,20 +67,12 @@ const ProviderContextProvider = props => {
   }, [dbUser]);
 
   const handleAddress = address => {
-    console.log(address);
-    const geoPoints = new firestore.GeoPoint(
-      address.latitude,
-      address.longitude,
-    );
     var coordinates = {
       latitude: address.latitude,
       longitude: address.longitude,
     };
-    var hash = geohash.encode(address.latitude, address.longitude);
     setAddress(address.address);
-    setgeoHash(hash);
     setcoordinate(coordinates);
-    setgeoPoint(geoPoints);
     setRegion({
       latitude: address.latitude,
       longitude: address.longitude,
@@ -170,8 +158,6 @@ const ProviderContextProvider = props => {
         modals,
         setModal,
         Address,
-        geoPoint,
-        geoHash,
         coordinate,
         region,
         handleAddress,

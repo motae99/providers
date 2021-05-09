@@ -99,10 +99,9 @@ const FileUpload = () => {
   const pickMultiple = () => {
     ImagePicker.openPicker({
       multiple: true,
-      waitAnimationEnd: true,
+      waitAnimationEnd: false,
       includeExif: true,
-      forceJpg: false,
-      // mediaType: 'video',
+      forceJpg: true,
     })
       .then(images => {
         var imagese = images.map(i => {

@@ -22,6 +22,8 @@ const Services = () => {
     return tokenStorage;
   };
 
+  storageToken();
+
   const getFcmToken = async () => {
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
@@ -107,8 +109,6 @@ const Services = () => {
   };
 
   useEffect(() => {
-    storageToken();
-
     if (!localToken) {
       console.log('we dont have');
       requestUserPermission();

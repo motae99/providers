@@ -1,8 +1,15 @@
-import React, {createContext, useState, useRef, useEffect} from 'react';
+import React, {
+  createContext,
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+} from 'react';
 import {Dimensions} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {AuthContext} from 'context/authContext';
+import * as geofirestore from 'geofirestore';
 
 import Toast from 'react-native-toast-message';
 import I18n from 'utils/i18n';
@@ -10,6 +17,7 @@ import I18n from 'utils/i18n';
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0122;
+const GeoFirestore = geofirestore.initializeApp(firestore());
 
 export const ProviderContext = createContext();
 
@@ -17,8 +25,8 @@ const ProviderContextProvider = props => {
   const {dbUser} = React.useContext(AuthContext);
 
   const imagesRef = useRef();
-  const [eventProvider, setEventProvider] = useState(null);
-  const [eventServices, setEventServices] = useState(null);
+  const [provider, setProvider] = useState(null);
+  const [services, setServices] = useState(null);
   const [indexArry, setIndexArry] = useState([]);
   const [perc, setPerc] = useState();
   const [images, setImages] = useState(null);
@@ -29,42 +37,76 @@ const ProviderContextProvider = props => {
   const [Address, setAddress] = useState('');
   const [coordinate, setcoordinate] = useState(null);
   const [region, setRegion] = useState(null);
+  const [query, setQuery] = useState(null);
+  const [geoRef, setGeoRef] = useState(null);
+  const [servicesQuery, setServicesQuery] = useState(null);
+
+  useMemo(() => {
+    if (dbUser.serviceType === 'Events') {
+      const providerquery = firestore()
+        .collection('eventProviders')
+        .doc(dbUser?.uid);
+      const service = firestore().collection('eventServices');
+      const geocollection = GeoFirestore.collection('eventProviders');
+      setQuery(providerquery);
+      setGeoRef(geocollection);
+      setServicesQuery(service);
+    }
+
+    if (dbUser.serviceType === 'Photography') {
+      const providerquery = firestore()
+        .collection('photoProviders')
+        .doc(dbUser?.uid);
+      const service = firestore().collection('photoServices');
+      const geocollection = GeoFirestore.collection('photoProviders');
+      setGeoRef(geocollection);
+      setQuery(providerquery);
+      setServicesQuery(service);
+    }
+
+    if (dbUser.serviceType === 'EventPlanner') {
+      const providerquery = firestore()
+        .collection('eventPlannerProviders')
+        .doc(dbUser?.uid);
+      const service = firestore().collection('eventPlannerServices');
+      const geocollection = GeoFirestore.collection('eventPlannerProviders');
+      setGeoRef(geocollection);
+      setQuery(providerquery);
+      setServicesQuery(service);
+    }
+  }, [dbUser]);
 
   useEffect(() => {
-    const subscriber = firestore()
-      .collection('eventServices')
+    const subscriber = servicesQuery
       .orderBy('timestamp', 'desc')
       .onSnapshot(querySnapshot => {
         if (querySnapshot) {
-          const services = querySnapshot.docs.map(documentSnapshot => {
+          const service = querySnapshot.docs.map(documentSnapshot => {
             return {
               ...documentSnapshot.data(),
               key: documentSnapshot.id,
             };
           });
-          if (services && services.length > 0) {
+          if (service && service.length > 0) {
             // console.log(services);
-            setEventServices(services);
+            setServices(service);
           }
         }
       });
 
     return () => subscriber();
-  }, []);
+  }, [servicesQuery]);
 
   useEffect(() => {
-    const subscriber = firestore()
-      .collection('eventProviders')
-      .doc(dbUser?.uid)
-      .onSnapshot(documentSnapshot => {
-        if (documentSnapshot.exists) {
-          setEventProvider(documentSnapshot.data());
-        } else {
-          setEventProvider(null);
-        }
-      });
+    const subscriber = query.onSnapshot(documentSnapshot => {
+      if (documentSnapshot.exists) {
+        setProvider(documentSnapshot.data());
+      } else {
+        setProvider(null);
+      }
+    });
     return () => subscriber();
-  }, [dbUser]);
+  }, [query]);
 
   const handleAddress = address => {
     var coordinates = {
@@ -85,7 +127,9 @@ const ProviderContextProvider = props => {
 
   const uploadPhotoAsync = async (uri, uid) => {
     const fileExt = uri.split('.').pop();
-    const path = `providers/events/${uid}/${Date.now()}.${fileExt}`;
+    const path = `providers/${
+      dbUser.serviceType
+    }/${uid}/${Date.now()}.${fileExt}`;
     const putFile = uri.replace('file:///', '/');
     return new Promise(async (res, rej) => {
       let upload = storage().ref(path).putFile(putFile);
@@ -109,9 +153,9 @@ const ProviderContextProvider = props => {
   };
 
   const downButtonHandler = () => {
-    console.log('downButton is working');
+    console.log('downButton is working', dynamicIndex);
     imagesRef?.current?.scrollTo({
-      x: indexArry[dynamicIndex],
+      x: dynamicIndex,
       y: 0,
       animated: true,
     });
@@ -144,8 +188,8 @@ const ProviderContextProvider = props => {
     <ProviderContext.Provider
       value={{
         imagesRef,
-        eventProvider,
-        eventServices,
+        provider,
+        services,
         uploadLoap,
         indexArry,
         setIndexArry,
@@ -161,6 +205,8 @@ const ProviderContextProvider = props => {
         coordinate,
         region,
         handleAddress,
+        geoRef,
+        query,
       }}>
       {props.children}
     </ProviderContext.Provider>

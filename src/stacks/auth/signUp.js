@@ -168,7 +168,7 @@ const SignUp = ({navigation}) => {
               <Picker.Item
                 key={'124'}
                 label={'Event Planner'}
-                value={'Event Planner'}
+                value={'EventPlanner'}
               />
               <Picker.Item key={'1235'} label={'Beauty'} value={'Beauty'} />
               <Picker.Item

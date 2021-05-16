@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import * as React from 'react';
+import React, {useContext} from 'react';
 import {
   View,
   Text,
@@ -13,49 +13,17 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
-import firestore from '@react-native-firebase/firestore';
 import Tabs from 'navigation/tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import EventProvider from 'stacks/events/eventProvider';
-import EventServices from 'stacks/events/eventServices';
-import Unverified from 'components/unverified';
-
 import Animated from 'react-native-reanimated';
 import ProfileImage from 'components/profileImage';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
 
-import Phone from 'auth/phone';
 import {AuthContext} from 'context/authContext';
-import ProviderContextProvider from 'context/providerContext';
-
-const Stack = createSharedElementStackNavigator();
-
-const AddEventProvider = () => {
-  return (
-    <ProviderContextProvider>
-      <Stack.Navigator headerMode={'none'}>
-        <Stack.Screen name="EventProvider" component={EventProvider} />
-      </Stack.Navigator>
-    </ProviderContextProvider>
-  );
-};
-
-const AddEventServices = () => {
-  return (
-    <ProviderContextProvider>
-      <Stack.Navigator headerMode={'none'}>
-        <Stack.Screen name="EventServices" component={EventServices} />
-        <Stack.Screen name="Unverified" component={Unverified} />
-      </Stack.Navigator>
-    </ProviderContextProvider>
-  );
-};
 
 function CustomDrawerContent({progress, ...rest}) {
-  const {signOut, dbUser} = React.useContext(AuthContext);
+  const {signOut, dbUser} = useContext(AuthContext);
   const ripple = TouchableNativeFeedback.Ripple('#55DAEA', false);
 
   const translateX = Animated.interpolate(progress, {
@@ -162,51 +130,6 @@ function CustomDrawerContent({progress, ...rest}) {
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  const [eventProvider, setEventProvider] = React.useState(null);
-  const {User, dbUser, signOut} = React.useContext(AuthContext);
-
-  React.useEffect(() => {
-    // signOut();
-    const subscriber = firestore()
-      .collection('eventProviders')
-      .doc(dbUser?.uid)
-      .onSnapshot(documentSnapshot => {
-        if (documentSnapshot.exists) {
-          // console.log('User data: ', documentSnapshot.data());
-          setEventProvider(documentSnapshot.data());
-        } else {
-          setEventProvider(null);
-        }
-      });
-    return () => subscriber();
-  }, [dbUser]);
-
-  // if (User && !User.phoneNumber) {
-  //   return <Phone />;
-  // }
-
-  if (!dbUser) {
-    return (
-      <View
-        style={{
-          backgroundColor: 'green',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flex: 1,
-        }}>
-        <Text style={{color: 'white'}}>Data Base user not ready</Text>
-      </View>
-    );
-  }
-
-  if (!eventProvider) {
-    return <AddEventProvider />;
-  }
-
-  if (eventProvider && !eventProvider.verified) {
-    return <AddEventServices />;
-  }
-
   return (
     <Drawer.Navigator
       initialRouteName="HomeStack"
@@ -216,8 +139,6 @@ export default function App() {
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="Tabs" component={Tabs} />
-      <Drawer.Screen name="Edit" component={AddEventProvider} />
-      <Drawer.Screen name="Services" component={AddEventServices} />
     </Drawer.Navigator>
   );
 }

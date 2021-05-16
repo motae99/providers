@@ -120,6 +120,15 @@ const FileUpload = () => {
       });
   };
 
+  const SinglePick = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then(image => {
+      setImages(imagese);
+    });
+  };
   // const pickMultiple = () => {
   //   ImagePicker.openPicker({
   //     mediaType: 'video',
@@ -142,32 +151,6 @@ const FileUpload = () => {
       });
   };
 
-  const crop = image => {
-    var array = images;
-    var index = array.indexOf(image);
-
-    ImagePicker.openCropper({
-      path: image.uri,
-      width: 400,
-      height: 400,
-    })
-      .then(i => {
-        var newImage = {
-          uri: i.path,
-          width: i.width,
-          height: i.height,
-          mime: i.mime,
-        };
-        array[index] = '';
-        setImages(array);
-        console.log('received cropped image', image);
-      })
-      .catch(e => {
-        console.log(e);
-        Alert.alert(e.message ? e.message : e);
-      });
-  };
-
   const cleanupSingleImage = file => {
     console.log('selected file', file);
     var array = [images];
@@ -183,28 +166,6 @@ const FileUpload = () => {
       .catch(e => {
         alert(e);
       });
-  };
-
-  const renderVideo = video => {
-    console.log('rendering video');
-    console.log(video);
-    return (
-      <View style={{height: 300, width: 300}}>
-        <TouchableOpacity onLongPress={cleanupSingleImage(video)}>
-          <Video
-            source={{uri: video.uri, type: video.mime}}
-            rate={1}
-            paused={false}
-            volume={1}
-            muted={true}
-            resizeMode={'cover'}
-            onError={e => console.log('error this ', e)}
-            onLoad={load => console.log('loading this', load)}
-            repeat={true}
-          />
-        </TouchableOpacity>
-      </View>
-    );
   };
 
   const renderImage = image => {

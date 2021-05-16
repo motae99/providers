@@ -1,62 +1,17 @@
 import React from 'react';
-// import {enabledScreens} from 'react-native-screens';
-// import {createStackNavigator} from '@react-navigation/stack';
-import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
+import {enabledScreens} from 'react-native-screens';
+import {createStackNavigator} from '@react-navigation/stack';
+
+import EventProvider from 'stacks/providers/event';
+import PhotoProvider from 'stacks/providers/photo';
+import EventServices from 'stacks/events/eventServices';
+import Unverified from 'components/unverified';
 
 import Phone from 'auth/phone';
 // enabledScreens();
-const Stack = createSharedElementStackNavigator();
+const Stack = createStackNavigator();
 
-// const config = {
-//   animation: 'spring',
-//   config: {
-//     stiffness: 1000,
-//     damping: 500,
-//     mass: 3,
-//     overshootClamping: true,
-//     restDisplacementThreshold: 0.01,
-//     restSpeedThreshold: 0.01,
-//   },
-// };
-
-// const forSlide = ({current, next, inverted, layouts: {screen}}) => {
-//   const progress = Animated.add(
-//     current.progress.interpolate({
-//       inputRange: [0, 1],
-//       outputRange: [0, 1],
-//       extrapolate: 'clamp',
-//     }),
-//     next
-//       ? next.progress.interpolate({
-//           inputRange: [0, 1],
-//           outputRange: [0, 1],
-//           extrapolate: 'clamp',
-//         })
-//       : 0,
-//   );
-
-//   return {
-//     cardStyle: {
-//       transform: [
-//         {
-//           translateX: Animated.multiply(
-//             progress.interpolate({
-//               inputRange: [0, 1, 2],
-//               outputRange: [
-//                 screen.width, // Focused, but offscreen in the beginning
-//                 0, // Fully focused
-//                 screen.width * -0.3, // Fully unfocused
-//               ],
-//               extrapolate: 'clamp',
-//             }),
-//             inverted,
-//           ),
-//         },
-//       ],
-//     },
-//   };
-// };
-const HomeStack = () => {
+export const HomeStack = () => {
   return (
     <Stack.Navigator headerMode={'none'}>
       <Stack.Screen name="Phone" component={Phone} />
@@ -64,4 +19,20 @@ const HomeStack = () => {
   );
 };
 
-export default HomeStack;
+export const AddProvider = () => {
+  return (
+    <Stack.Navigator headerMode={'none'}>
+      <Stack.Screen name="PhotoProvider" component={PhotoProvider} />
+      <Stack.Screen name="EventProvider" component={EventProvider} />
+    </Stack.Navigator>
+  );
+};
+
+export const AddServices = () => {
+  return (
+    <Stack.Navigator headerMode={'none'}>
+      <Stack.Screen name="EventServices" component={EventServices} />
+      <Stack.Screen name="Unverified" component={Unverified} />
+    </Stack.Navigator>
+  );
+};

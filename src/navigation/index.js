@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {View, Text} from 'react-native';
 import AuthStack from 'navigation/authStack';
-import DrawerStack from 'navigation/drawerStack';
+import AppStack from 'navigation/appStack';
 
 import AuthContextProvider from 'context/authContext';
 
@@ -14,7 +14,7 @@ export function navigate(name, params) {
   navigationRef.current?.navigate(name, params);
 }
 
-const AppStack = () => {
+const Navigator = () => {
   const [initializing, setInitializing] = React.useState(true);
   const [User, setUser] = React.useState(null);
 
@@ -28,6 +28,7 @@ const AppStack = () => {
   React.useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (initializing) {
@@ -48,10 +49,10 @@ const AppStack = () => {
   return (
     <AuthContextProvider>
       <NavigationContainer>
-        {User ? <DrawerStack /> : <AuthStack />}
+        {User ? <AppStack /> : <AuthStack />}
       </NavigationContainer>
     </AuthContextProvider>
   );
 };
 
-export default AppStack;
+export default Navigator;

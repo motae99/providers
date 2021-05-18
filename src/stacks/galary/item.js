@@ -142,6 +142,7 @@ const Item = ({
       ],
     };
   });
+
   return (
     <Animated.View style={style}>
       <PanGestureHandler enabled={editing} onGestureEvent={onGestureEvent}>

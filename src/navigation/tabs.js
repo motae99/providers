@@ -1,13 +1,17 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ProviderContextProvider from 'context/providerContext';
+import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
+import {Colors} from 'styles';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Foundation from 'react-native-vector-icons/Foundation';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import Booking from 'stacks/events/booking';
 import Social from 'stacks/social';
 import Offers from 'stacks/offer';
+
 const Tab = createBottomTabNavigator();
 
 const BottomTabs = () => {
@@ -15,7 +19,7 @@ const BottomTabs = () => {
     <Tab.Navigator
       initialRouteName="Booking"
       tabBarOptions={{
-        activeTintColor: '#e91e63',
+        activeTintColor: Colors.primary.brand,
       }}>
       <Tab.Screen
         name="Social"

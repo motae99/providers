@@ -28,6 +28,7 @@ import {ProviderContext} from 'context/providerContext';
 
 import firestore from '@react-native-firebase/firestore';
 import * as geofirestore from 'geofirestore';
+import messaging from '@react-native-firebase/messaging';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -109,11 +110,16 @@ const EventProvider = () => {
         outDoor,
         party,
         files: images,
-        services: ['inDoor', 'outDoor'],
+        services: ['inDoor', 'outDoor', 'party'],
         ownerId: User.uid,
       };
 
-      await query.set(providerData);
+      await query
+        .set(providerData)
+        .then(() => {
+          messaging().subscribeToTopic(String(name + 'bookings'));
+        })
+        .catch(error => console.log(error));
 
       actions.resetForm({});
       actions.setStatus({success: true});
@@ -222,13 +228,13 @@ const EventProvider = () => {
                 value={values.inDoor}
                 onChangeText={handleChange('inDoor')}
                 placeholder="inDoor amount"
-                leftIcon={
-                  <Fontisto
-                    name="day-sunny"
-                    size={25}
-                    color={Colors.primary.brand}
-                  />
-                }
+                // leftIcon={
+                //   <Fontisto
+                //     name="day-sunny"
+                //     size={25}
+                //     color={Colors.primary.brand}
+                //   />
+                // }
                 onBlur={handleBlur('inDoor')}
               />
               <ErrorMessage errorValue={touched.inDoor && errors.inDoor} />
@@ -239,13 +245,13 @@ const EventProvider = () => {
                 value={values.outDoor}
                 onChangeText={handleChange('outDoor')}
                 placeholder="outDoor amount"
-                leftIcon={
-                  <Fontisto
-                    name="outDoor-clear"
-                    size={25}
-                    color={Colors.primary.brand}
-                  />
-                }
+                // leftIcon={
+                //   <Fontisto
+                //     name="outDoor-clear"
+                //     size={25}
+                //     color={Colors.primary.brand}
+                //   />
+                // }
                 onBlur={handleBlur('outDoor')}
               />
               <ErrorMessage errorValue={touched.outDoor && errors.outDoor} />
@@ -256,13 +262,13 @@ const EventProvider = () => {
                 value={values.party}
                 onChangeText={handleChange('party')}
                 placeholder="party amount"
-                leftIcon={
-                  <Fontisto
-                    name="outDoor-clear"
-                    size={25}
-                    color={Colors.primary.brand}
-                  />
-                }
+                // leftIcon={
+                //   <Fontisto
+                //     name="outDoor-clear"
+                //     size={25}
+                //     color={Colors.primary.brand}
+                //   />
+                // }
                 onBlur={handleBlur('party')}
               />
               <ErrorMessage errorValue={touched.party && errors.party} />

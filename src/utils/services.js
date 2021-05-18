@@ -15,15 +15,6 @@ const Services = () => {
     Linking.openURL(testUrl);
   }
 
-  const storageToken = async () => {
-    const tokenStorage = await AsyncStorage.getItem('fcmToken')
-      .then(token => setLocalToken(token)) //setLocalToken(token)
-      .catch(error => console.log(error));
-    return tokenStorage;
-  };
-
-  storageToken();
-
   const getFcmToken = async () => {
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
@@ -108,11 +99,20 @@ const Services = () => {
     }
   };
 
-  useEffect(() => {
-    if (!localToken) {
-      console.log('we dont have');
+  const storageToken = async () => {
+    try {
+      await AsyncStorage.getItem('fcmToken').then(token => {
+        // console.log('getToken from Storage and set It in State', token);
+        setLocalToken(token);
+      });
+    } catch (error) {
+      console.log('we dont have Token in Storage', error);
       requestUserPermission();
     }
+  };
+
+  useEffect(() => {
+    storageToken();
 
     messaging().onTokenRefresh(async token => {
       await AsyncStorage.setItem('fcmToken', token);

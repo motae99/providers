@@ -6,7 +6,7 @@ export default function SelectLocationScreen({notifyChange, closeModal}) {
   return (
     <View style={{flex: 1}}>
       <LocationView
-        apiKey={'AIzaSyCx60-3gx-i-UgRKTSErDhX7ZEmvb_yo5c'}
+        apiKey={'AIzaSyBQ5DOX3d0Ol6oKj0FSCL29PXnmDLVuaBg'}
         initialLocation={{
           latitude: 15.570526415687535,
           longitude: 32.546177983344954,

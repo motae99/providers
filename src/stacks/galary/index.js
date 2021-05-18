@@ -1,1 +1,1 @@
-export { default } from "./chrome";
+export {default} from './galary';

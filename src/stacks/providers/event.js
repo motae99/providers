@@ -27,6 +27,8 @@ import {AuthContext} from 'context/authContext';
 import {ProviderContext} from 'context/providerContext';
 
 import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
+
 import * as geofirestore from 'geofirestore';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -155,7 +157,13 @@ const EventProvider = () => {
         ownerId: User.uid,
       };
 
-      await geocollection.doc(User.uid).set(providerData);
+      await geocollection
+        .doc(User.uid)
+        .set(providerData)
+        .then(() => {
+          messaging().subscribeToTopic(String(name + 'bookings'));
+        })
+        .catch(error => console.log(error));
       // this.props.navigation.navigate('ProviderHome')
 
       actions.resetForm({});

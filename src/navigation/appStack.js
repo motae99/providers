@@ -5,16 +5,17 @@ import {View, Text} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 // import {AddProvider, AddServices} from 'navigation/homeStack';
 import DrawerStack from 'navigation/drawerStack';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
 import EventProvider from 'stacks/providers/event';
 import PhotoProvider from 'stacks/providers/photo';
 
 import Galary from 'stacks/galary';
+import Story from 'stacks/galary/story';
 import {AuthContext} from 'context/authContext';
 import ProviderContextProvider from 'context/providerContext';
 
-const Stack = createStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 export default function App() {
   const [provider, setProvider] = React.useState(null);
@@ -79,11 +80,16 @@ export default function App() {
     <ProviderContextProvider>
       {!provider ? (
         <Stack.Navigator headerMode={'none'}>
-          <Stack.Screen name="Galary" component={Galary} />
-
-          {/* {dbUser.serviceType === 'Photography' ? (
-            <Stack.Screen name="PhotoProvider" component={PhotoProvider} />
-          ) : dbUser.serviceType === 'Events' ? (
+          {/* {dbUser.serviceType === 'Photography' ? ( */}
+          <Stack.Screen
+            name="PhotoProvider"
+            component={
+              dbUser.serviceType === 'Photography'
+                ? PhotoProvider
+                : EventProvider
+            }
+          />
+          {/* ) : dbUser.serviceType === 'Events' ? (
             <Stack.Screen name="EventProvider" component={EventProvider} />
           ) : null} */}
         </Stack.Navigator>

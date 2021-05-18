@@ -1,11 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Dimensions, TouchableOpacity, Image} from 'react-native';
+
+import {
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  NativeModules,
+} from 'react-native';
 import {Sizing, Outlines, Colors} from 'styles';
 import FastImage from 'react-native-fast-image';
 import Feather from 'react-native-vector-icons/Feather';
-import * as ImagePicker from 'react-native-image-picker';
+// import * as ImagePicker from 'react-native-image-picker';
 import {AuthContext} from 'context/authContext';
+import {ProviderContext} from 'context/providerContext';
+var ImagePicker = NativeModules.ImageCropPicker;
 
 const {width, height} = Dimensions.get('window');
 const containerSize = height / 5;
@@ -13,9 +22,15 @@ const imageSize = containerSize - Sizing.x10;
 
 const ProfileImage = ({response, setResponse}) => {
   const {dbUser} = React.useContext(AuthContext);
+  const {updateUserPhoto} = React.useContext(ProviderContext);
 
-  // const [response, setResponse] = React.useState(null);
+  const [edit, setEdited] = React.useState(null);
   const [userImage, setUserImage] = React.useState(dbUser?.photoURL);
+
+  // const updateImage = async selectedImage => {
+  //   console.log('cropRect', selectedImage.path);
+  //   // const profileImage = await Storage(photoURL, user.uid);
+  // };
   return (
     <>
       <View
@@ -40,20 +55,15 @@ const ProfileImage = ({response, setResponse}) => {
           resizeMode={FastImage.resizeMode.cover}
         /> */}
         <TouchableOpacity
-          onPress={() =>
-            ImagePicker.launchImageLibrary(
-              {
-                mediaType: 'photo',
-                includeBase64: false,
-                maxHeight: imageSize,
-                maxWidth: imageSize,
-              },
-              (response) => {
-                setResponse(response);
-                setUserImage(response.uri);
-              },
-            )
-          }>
+          onPress={() => {
+            return ImagePicker.openPicker({
+              width: 300,
+              height: 400,
+              cropping: true,
+            }).then(image => {
+              updateUserPhoto(image.path);
+            });
+          }}>
           <Image
             source={
               userImage
@@ -70,7 +80,7 @@ const ProfileImage = ({response, setResponse}) => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity
+        <View
           elevation={100}
           style={{
             height: 36, //Sizing.icons.x40,
@@ -81,23 +91,9 @@ const ProfileImage = ({response, setResponse}) => {
             backgroundColor: 'white',
             justifyContent: 'center',
             alignItems: 'center',
-          }}
-          onPress={() =>
-            ImagePicker.launchCamera(
-              {
-                mediaType: 'photo',
-                includeBase64: false,
-                maxHeight: imageSize,
-                maxWidth: imageSize,
-              },
-              (response) => {
-                setResponse(response);
-                setUserImage(response.uri);
-              },
-            )
-          }>
+          }}>
           <Feather name="camera" color={Colors.primary.brand} size={25} />
-        </TouchableOpacity>
+        </View>
       </View>
     </>
   );

@@ -161,6 +161,23 @@ const ProviderContextProvider = props => {
     });
   };
 
+  const updateUserPhoto = async photoPath => {
+    // console.log(photoPath);
+    try {
+      await uploadPhotoAsync(photoPath, dbUser.uid)
+        .then(remoteUri => {
+          query.update({photoURL: remoteUri});
+          firestore()
+            .collection('providers')
+            .doc(dbUser?.uid)
+            .update({photoURL: remoteUri});
+        })
+        .catch(error => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const uploadLoap = async User => {
     setUpladingTotal(images.length);
 
@@ -207,6 +224,7 @@ const ProviderContextProvider = props => {
         handleAddress,
         geoRef,
         query,
+        updateUserPhoto,
       }}>
       {props.children}
     </ProviderContext.Provider>

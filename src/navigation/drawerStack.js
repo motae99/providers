@@ -14,22 +14,37 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 
+import Galary from 'stacks/galary';
+import Story from 'stacks/galary/story';
+
 import Tabs from 'navigation/tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Animated from 'react-native-reanimated';
+// import Animated from 'react-native-reanimated';
 import ProfileImage from 'components/profileImage';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
+import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
 import {AuthContext} from 'context/authContext';
+
+const Stack = createSharedElementStackNavigator();
+
+const GalaryStack = () => {
+  return (
+    <Stack.Navigator headerMode={'none'}>
+      <Stack.Screen name="Galary" component={Galary} />
+      <Stack.Screen name="Story" component={Story} />
+    </Stack.Navigator>
+  );
+};
 
 function CustomDrawerContent({progress, ...rest}) {
   const {signOut, dbUser} = useContext(AuthContext);
   const ripple = TouchableNativeFeedback.Ripple('#55DAEA', false);
 
-  const translateX = Animated.interpolate(progress, {
-    inputRange: [0, 1],
-    outputRange: [300, 0],
-  });
+  // const translateX = Animated.interpolate(progress, {
+  //   inputRange: [0, 1],
+  //   outputRange: [300, 0],
+  // });
 
   return (
     <DrawerContentScrollView {...rest}>
@@ -42,17 +57,18 @@ function CustomDrawerContent({progress, ...rest}) {
           justifyContent: 'center',
           alignItems: 'center',
           position: 'absolute',
-          top: 100,
+          top: 60,
           alignSelf: 'center',
         }}>
         <ProfileImage />
       </View>
-      <Animated.View
+      <View
         style={{
-          transform: [{translateX}],
+          // transform: [{translateX}],
           marginTop: 150,
           paddingTop: 150,
-          borderTopLeftRadius: 60,
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
           backgroundColor: '#F8F8FD',
         }}>
         <Text
@@ -122,7 +138,7 @@ function CustomDrawerContent({progress, ...rest}) {
             </View>
           </TouchableNativeFeedback>
         </View>
-      </Animated.View>
+      </View>
     </DrawerContentScrollView>
   );
 }
@@ -139,6 +155,7 @@ export default function App() {
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="Tabs" component={Tabs} />
+      <Drawer.Screen name="Galary" component={GalaryStack} />
     </Drawer.Navigator>
   );
 }

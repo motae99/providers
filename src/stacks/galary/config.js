@@ -1,3 +1,6 @@
+// export const WIDTH_SIZE = width / 2 - MARGIN;
+// export const HEGHT_SIZE = width * 0.8;
+
 import {Dimensions} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
@@ -6,7 +9,7 @@ import {Easing} from 'react-native-reanimated';
 // }
 
 const {width} = Dimensions.get('window');
-export const MARGIN = 8;
+export const MARGIN = 4;
 export const SIZE = width / 2 - MARGIN;
 export const COL = 2;
 

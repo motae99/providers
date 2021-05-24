@@ -1,6 +1,6 @@
 package com.providers;
 //unimodules
-import com.myapp.generated.BasePackageList;
+import com.providers.generated.BasePackageList;
 //unimodules
 
 import android.app.Application;
@@ -55,7 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
           );
           packages.addAll(unimodules);
           // Add unimodules
-          
+
           return packages;
         }
 

@@ -4,9 +4,10 @@ import {View, Text} from 'react-native';
 
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-// import Navigator from 'navigation';
-// import Services from 'utils/services';
-
+import Navigator from 'navigation';
+import Services from 'utils/services';
+import Payments from 'stacks/payments';
+import Tabs from 'stacks/tabs';
 import codePush from 'react-native-code-push';
 const codePushOptions = {
   updateDialog: true,
@@ -14,12 +15,16 @@ const codePushOptions = {
   installMode: codePush.InstallMode.IMMEDIATE,
 };
 
+import {Constants} from 'react-native-unimodules';
+
 const App = ({props}) => {
+  console.log(Constants.systemFonts);
+
   return (
     <SafeAreaProvider>
       {/* <Services />
       <Navigator /> */}
-
+      {/* <Tabs /> */}
       <View
         style={{
           justifyContent: 'center',

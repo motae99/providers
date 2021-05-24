@@ -108,26 +108,26 @@ const AgendaScreen = () => {
 
   // .where('providerId', '==', dbUser.uid)
 
-  useEffect(() => {
-    const subscriber = firestore()
-      .collection('bookings')
-      // .where('providerId', '==', dbUser.uid)
-      .orderBy('timeStamp', 'asc')
-      .onSnapshot(querySnapshot => {
-        if (querySnapshot) {
-          const data = querySnapshot.docs.map(documentSnapshot => {
-            return {
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
-            };
-          });
-          if (data && data.length > 0) {
-            setBookings(data);
-          }
-        }
-      });
-    return () => subscriber();
-  }, [dbUser.uid]);
+  // useEffect(() => {
+  //   const subscriber = firestore()
+  //     .collection('bookings')
+  //     // .where('providerId', '==', dbUser.uid)
+  //     .orderBy('timeStamp', 'asc')
+  //     .onSnapshot(querySnapshot => {
+  //       if (querySnapshot) {
+  //         const data = querySnapshot.docs.map(documentSnapshot => {
+  //           return {
+  //             ...documentSnapshot.data(),
+  //             key: documentSnapshot.id,
+  //           };
+  //         });
+  //         if (data && data.length > 0) {
+  //           setBookings(data);
+  //         }
+  //       }
+  //     });
+  //   return () => subscriber();
+  // }, [dbUser.uid]);
 
   // console.log(items);
 

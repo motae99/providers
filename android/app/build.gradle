@@ -1,5 +1,10 @@
 apply plugin: "com.android.application"
 
+//Expo Unimodules
+apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
+//Expo Unimodules
+
+
 import com.android.build.OutputFile
 
 /**
@@ -194,6 +199,10 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1' //rnfiebase
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    //Expo Unimodules
+    addUnimodulesDependencies()
+    //Expo Unimodules
 
     // google maps
     implementation(project(':react-native-maps')){

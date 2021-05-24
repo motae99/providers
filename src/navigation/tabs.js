@@ -11,6 +11,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Booking from 'stacks/events/booking';
 import Social from 'stacks/social';
 import Offers from 'stacks/offer';
+import Payments from 'stacks/payments';
 
 const Tab = createBottomTabNavigator();
 
@@ -52,6 +53,16 @@ const BottomTabs = () => {
               color={color}
               size={size}
             />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Payments"
+        component={Payments}
+        options={{
+          tabBarLabel: 'Payments',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="offer" color={color} size={size} />
           ),
         }}
       />

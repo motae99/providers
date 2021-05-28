@@ -6,7 +6,7 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
   },

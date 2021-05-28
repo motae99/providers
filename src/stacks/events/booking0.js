@@ -12,7 +12,7 @@ import {
 
 import {Agenda} from 'react-native-calendars';
 import moment from 'moment';
-import CalenderItem from 'stacks/events/components/calenderItem';
+import CalenderItem from 'stacks/booking/components/calenderItem';
 
 const styles = StyleSheet.create({
   row: {

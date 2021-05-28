@@ -93,6 +93,7 @@
     "react-navigation-shared-element": "^3.0.0",
     "react-navigation-stack": "^2.3.11",
     "rn-credit-card": "^0.1.7",
+    "xdate": "^0.8.2",
     "yup": "^0.32.9"
   },
   "devDependencies": {

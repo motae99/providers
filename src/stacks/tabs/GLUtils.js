@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable no-undef */
 import {RefObject, useEffect, useRef} from 'react';
 import Color from 'color';

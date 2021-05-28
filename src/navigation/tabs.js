@@ -3,15 +3,13 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ProviderContextProvider from 'context/providerContext';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import {Colors} from 'styles';
+import MyTabBar from 'navigation/components/tabBar';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Foundation from 'react-native-vector-icons/Foundation';
-import Entypo from 'react-native-vector-icons/Entypo';
-
-import Booking from 'stacks/events/booking';
+import Booking from 'stacks/booking';
 import Social from 'stacks/social';
 import Offers from 'stacks/offer';
 import Payments from 'stacks/payments';
+import Profile from 'stacks/offer';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,6 +17,7 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="Booking"
+      tabBar={props => <MyTabBar {...props} />}
       tabBarOptions={{
         activeTintColor: Colors.primary.brand,
       }}>
@@ -27,9 +26,9 @@ const BottomTabs = () => {
         component={Social}
         options={{
           tabBarLabel: 'Social',
-          tabBarIcon: ({color, size}) => (
-            <Foundation name="social-treehouse" color={color} size={size} />
-          ),
+          iconName: 'copy',
+          activeColor: Colors.primary.brand,
+          inActiveColor: Colors.secondary.s200,
         }}
       />
       <Tab.Screen
@@ -37,33 +36,32 @@ const BottomTabs = () => {
         component={Offers}
         options={{
           tabBarLabel: 'Offers',
-          tabBarIcon: ({color, size}) => (
-            <MaterialCommunityIcons name="offer" color={color} size={size} />
-          ),
+          iconName: 'activity',
+          activeColor: Colors.primary.brand,
+          inActiveColor: Colors.secondary.s200,
         }}
       />
-      <Tab.Screen
-        name="Booking"
-        component={Booking}
-        options={{
-          tabBarLabel: 'Home',
-          tabBarIcon: ({color, size}) => (
-            <MaterialCommunityIcons
-              name="order-bool-descending-variant"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
+
+      <Tab.Screen name="Booking" component={Booking} />
       <Tab.Screen
         name="Payments"
         component={Payments}
         options={{
           tabBarLabel: 'Payments',
-          tabBarIcon: ({color, size}) => (
-            <MaterialCommunityIcons name="offer" color={color} size={size} />
-          ),
+          iconName: 'edit-3',
+          activeColor: Colors.primary.brand,
+          inActiveColor: Colors.secondary.s200,
+        }}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
+          iconName: 'user',
+          activeColor: Colors.primary.brand,
+          inActiveColor: Colors.secondary.s200,
         }}
       />
     </Tab.Navigator>

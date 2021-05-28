@@ -18,7 +18,7 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/Feather';
-
+// import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import StaticTabbar, {SIZE} from './StaticTabbar';
@@ -162,9 +162,9 @@ const Tabbar = ({open}) => {
         ]}
         pointerEvents="box-none">
         <View style={styles.items}>
-          <Row label="Mood check-in" icon="edit" />
-          <Row label="Voice note" icon="mic" />
-          <Row label="Add Photo" icon="image" />
+          <Row label="Edit details" icon="edit" />
+          <Row label="Add services" icon="mic" />
+          <Row label="Sort Photo" icon="image" />
         </View>
       </Animated.View>
     </>

@@ -1,31 +1,34 @@
 import React from 'react';
-import {View, Dimensions} from 'react-native';
+import {Dimensions, View} from 'react-native';
 const width = Dimensions.get('window').width;
-// get Svg shape
-const knob = () => {
+import Svg, {Path} from 'react-native-svg';
+const height = 25;
+function SvgComponent(props) {
   return (
     <View
       style={{
-        // backgroundColor: 'rgba(212, 234, 250, 1)',
-        // backgroundColor: '#000',
-        height: 150,
+        backgroundColor: 'white',
+        position: 'absolute',
+        right: -width / 2,
+        top: -1,
+        zIndex: 10,
         width,
-        flexDirection: 'row',
-        // backgroundColor: 'white',
       }}>
-      <View style={{flex: 1, backgroundColor: 'green'}} />
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'blue',
-          borderRadius: 100,
-          overflow: 'hidden',
-          transform: [{translateY: -120}],
-          // zIndex: 100,
-        }}
-      />
-      <View style={{flex: 1, backgroundColor: 'green'}} />
+      <Svg
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        fill="none"
+        {...props}>
+        <Path
+          d={`M0 0h${width}v5H272c-24.5 4.286-61.5 20-85.5 20S122.5 5 99 5H0V0z`}
+          fill={props.color}
+        />
+
+        <Path d="M200 11l-12.276 4L176 11" stroke="#867C7C" strokeWidth={5} />
+      </Svg>
     </View>
   );
-};
-export default knob;
+}
+
+export default SvgComponent;

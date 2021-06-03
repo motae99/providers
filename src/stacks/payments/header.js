@@ -62,7 +62,7 @@ const Header = ({translation, index}) => {
       <View style={styles.values}>
         <View>
           <ReText style={styles.value} text={price} />
-          {/* <Text style={styles.label}>Payments</Text> */}
+          <ReText style={styles.label} text={label} />
         </View>
         <View>
           <ReText style={style} text={percentChange} />

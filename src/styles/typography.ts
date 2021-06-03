@@ -73,7 +73,7 @@ export const header: Record<Header, TextStyle> = {
   x30: {
     ...fontSize.x30,
     ...lineHeight.x40,
-    ...fontWeight.semibold,
+    ...fontWeight.bold,
   },
   x40: {
     ...fontSize.x40,

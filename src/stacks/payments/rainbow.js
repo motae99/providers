@@ -7,21 +7,26 @@ import NavBar from './components/navBar';
 import Progress from './components/progress';
 import Gouge from './components/gouge';
 import Stats from './components/bookingStats';
+import Background from 'assets/svg/background';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'space-between',
+    // backgroundColor: 'white',
+    // justifyContent: 'space-between',
   },
 });
 
 const Rainbow = () => {
   return (
     <View style={styles.container}>
-      <NavBar />
-      <Graph />
-      <Progress />
-      <Gouge />
+      <Background>
+        {/* <View style={{height: 150, width: 400}} /> */}
+
+        {/* <Graph /> */}
+        {/* <Progress /> */}
+        <Gouge />
+      </Background>
     </View>
   );
 };

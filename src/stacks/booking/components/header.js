@@ -12,14 +12,13 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 30,
     width,
-    backgroundColor: 'rgba(212, 234, 250, 1)',
   },
   text: {...Typography.header.x30},
 });
 
-const Header = () => {
+const Header = ({color}) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: color}]}>
       <Text style={styles.text}>BOOKINGS</Text>
       <Feather name="bell" size={24} color={Colors.primary.brand} />
     </View>

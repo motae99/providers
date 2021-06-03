@@ -28,7 +28,7 @@ import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {Sizing, Outlines, Colors, Typography} from 'styles';
 const width = Dimensions.get('window').width;
 const testIDs = require('components/testIDs');
-
+const backGroundColor = 'rgba(212, 234, 250, 1)';
 const styles = StyleSheet.create({
   item: {
     backgroundColor: 'white',
@@ -151,6 +151,8 @@ const AgendaScreen = () => {
   //     .collection('bookings')
   //     // .where('providerId', '==', dbUser.uid)
   //     .orderBy('timeStamp', 'asc')
+  //     .where('status', '==', 'done')
+  //     // .limit(2)
   //     .onSnapshot(querySnapshot => {
   //       if (querySnapshot) {
   //         const data = querySnapshot.docs.map(documentSnapshot => {
@@ -181,9 +183,14 @@ const AgendaScreen = () => {
 
   // if (loading) {
   //   return (
-  //     <View>
+  //     <SafeAreaView style={{flex: 1}}>
+  //       <StatusBar
+  //         translucent
+  //         backgroundColor={backGroundColor}
+  //         barStyle={'dark-content'}
+  //       />
   //       <Text>loading ...</Text>
-  //     </View>
+  //     </SafeAreaView>
   //   );
   // }
 
@@ -191,10 +198,10 @@ const AgendaScreen = () => {
     <SafeAreaView style={{flex: 1}}>
       <StatusBar
         translucent
-        backgroundColor="rgba(212, 234, 250, 1)"
+        backgroundColor={backGroundColor}
         barStyle={'dark-content'}
       />
-      <Header />
+      <Header color={backGroundColor} />
       <BottomSheetModalProvider>
         <Agenda
           testID={testIDs.agenda.CONTAINER}
@@ -202,17 +209,17 @@ const AgendaScreen = () => {
           // loadItemsForMonth={day => loadItems(day)}
           selected={timeToString(Date())}
           renderItem={item => {
-            return <Item {...{item}} />;
+            return <Item {...{item, handlePresentModalPress}} />;
           }}
           renderEmptyDate={day => {
-            return <EmptyDay {...{day, handlePresentModalPress}} />;
+            return <EmptyDay {...{day}} />;
           }}
           rowHasChanged={(r1, r2) => {
             return <RowHasChanged {...{r1, r2}} />;
           }}
-          // renderKnob={() => {
-          //   return <Knob />;
-          // }}
+          renderKnob={() => {
+            return <Knob color={backGroundColor} />;
+          }}
           // markingType={'period'}
           // markedDates={{
           //   //    '2017-05-08': {textColor: '#43515c'},
@@ -249,36 +256,36 @@ const AgendaScreen = () => {
           hideExtraDays={true}
           theme={{
             backgroundColor: '#fff',
-            calendarBackground: 'rgba(212, 234, 250, 1)',
-            // textSectionTitleColor: 'blue',
+            calendarBackground: backGroundColor,
+            // textSectionTitleColor: Colors.neutral.s400,
             // textSectionTitleDisabledColor: '#d9e1e8',
-            // selectedDayBackgroundColor: 'yellow',
+            // selectedDayBackgroundColor: Colors.primary.s200,
             // selectedDayTextColor: 'navy',
-            // todayTextColor: 'orange',
+            // todayTextColor: 'blue',
             // dayTextColor: '#2d4150',
-            // textDisabledColor: '#d9e1e8',
+            // // textDisabledColor: '#d9e1e8',
             // dotColor: '#00adf5',
-            // selectedDotColor: '#ffffff',
-            // arrowColor: 'orange',
-            // disabledArrowColor: '#d9e1e8',
-            // monthTextColor: 'blue',
-            // indicatorColor: 'blue',
+            // // selectedDotColor: '#ffffff',
+            // // arrowColor: 'orange',
+            // // disabledArrowColor: '#d9e1e8',
+            // // monthTextColor: 'blue',
+            // // indicatorColor: 'blue',
             // textDayFontFamily: 'monospace',
             // textMonthFontFamily: 'monospace',
             // textDayHeaderFontFamily: 'monospace',
-            // textDayFontWeight: '300',
-            // textMonthFontWeight: 'bold',
-            // textDayHeaderFontWeight: '300',
-            // textDayFontSize: 16,
-            // textMonthFontSize: 16,
-            // textDayHeaderFontSize: 16,
+            // textDayFontWeight: 'bold',
+            // // textMonthFontWeight: 'bold',
+            // textDayHeaderFontWeight: 'bold',
+            // textDayFontSize: 14,
+            // textMonthFontSize: 14,
+            // textDayHeaderFontSize: 14,
             // ...calendarTheme,
             // agendaDayTextColor: 'yellow',
             // agendaDayNumColor: 'green',
             // agendaTodayColor: 'red',
-            agendaKnobColor: 'gray',
+            // agendaKnobColor: 'gray',
           }}
-          // style={{marginBottom: 10}}
+          // style={{marginBottom: 50}}
         />
         <BottomSheetModal
           ref={bottomSheetModalRef}

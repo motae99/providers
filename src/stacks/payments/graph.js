@@ -18,22 +18,25 @@ I18nManager.allowRTL(false);
 const {width} = Dimensions.get('window');
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-// const SELECTION_WIDTH = SIZE;
-const SELECTION_WIDTH = width - 32;
+const SELECTION_WIDTH = SIZE;
+// const SELECTION_WIDTH = width - 32;
 const BUTTON_WIDTH = SELECTION_WIDTH / graphs.length;
 const styles = StyleSheet.create({
   container: {
+    width,
+    height: 500,
+    // backgroundColor: 'red',
     // flex: 1,
     // backgroundColor: 'white',
-    backgroundColor: 'rgba(176,239,235, .4)',
-
-    borderRadius: 30,
+    // backgroundColor: 'rgba(176,239,235, .4)',
+    // borderRadius: 30,
   },
   backgroundSelection: {
     backgroundColor: '#f3f3f3',
     ...StyleSheet.absoluteFillObject,
     width: BUTTON_WIDTH,
     borderRadius: 8,
+    opacity: 0.5,
   },
   selection: {
     flexDirection: 'row',
@@ -69,24 +72,26 @@ const Graph = () => {
   }));
   return (
     <View style={styles.container}>
-      <Header translation={translation} index={current} />
-      <View>
-        {/* <View
+      <View style={{height: 170, width: 400}} />
+
+      {/* <Header translation={translation} index={current} /> */}
+      {/* <View> */}
+      <View
         style={{
           width: SIZE,
-          height: SIZE / 2,
-          backgroundColor: 'red',
-          alignSelf: 'center',
-          borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,
-        }}></View> */}
+          height: SIZE * 0.6,
+          // backgroundColor: 'red',
+          // alignSelf: 'center',
+          // borderTopLeftRadius: 10,
+          // borderTopRightRadius: 10,
+        }}>
         <Svg width={SIZE} height={SIZE * 0.6}>
           <AnimatedPath
             animatedProps={animatedProps}
             fill="transparent"
-            stroke="#3f0d5c"
+            stroke="#fff"
             // stroke={Colors.primary.s600}
-            strokeWidth={3}
+            strokeWidth={4}
           />
         </Svg>
         <Cursor translation={translation} index={current} />

@@ -69,7 +69,7 @@ const MyTabBar = ({state, descriptors, navigation}) => {
                   height: 55,
                   borderRadius: 30,
                   marginLeft: 4,
-                  marginTop: -20,
+                  marginTop: -30,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>

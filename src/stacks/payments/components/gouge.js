@@ -7,17 +7,18 @@ const Indicator = () => {
   return (
     <View
       style={{
-        backgroundColor: Colors.primary.s600,
+        backgroundColor: Colors.neutral.white,
         marginHorizontal: 20,
         marginBottom: 5,
         borderRadius: 20,
-        height: 130,
-        paddingVertical: 20,
-        paddingHorizontal: 30,
-        alignSelf: 'center',
-        flexDirection: 'row',
+        height: 160,
+        width: 300,
+        // paddingVertical: 20,
+        // paddingHorizontal: 30,
+        // alignSelf: 'center',
+        // flexDirection: 'row',
       }}>
-      <View style={{flex: 1}}>
+      {/* <View style={{flex: 1}}>
         <Text style={{color: 'white', fontWeight: 'bold'}}>Payments</Text>
         <View
           style={{
@@ -34,15 +35,23 @@ const Indicator = () => {
             Total Paid
           </Text>
         </View>
-      </View>
-      <View style={{flex: 1}}>
-        <Progress.Circle
-          style={{margin: 10}}
-          // progress={this.state.progress}
-          // indeterminate={this.state.indeterminate}
-          direction="counter-clockwise"
-        />
-      </View>
+      </View> */}
+      {/* <View style={{flex: 1}}> */}
+      {/* <Progress.Circle
+          style={{width: 50, height: 50}}
+          progress={60}
+          indeterminate={5}
+          // direction="counter-clockwise"
+        /> */}
+      <Progress.Circle
+        style={StyleSheet.absoluteFillObject}
+        progress={0.4}
+        size={50}
+        indeterminate={false}
+        thickness={10}
+        strokeCap={'round'}
+      />
+      {/* </View> */}
     </View>
   );
 };

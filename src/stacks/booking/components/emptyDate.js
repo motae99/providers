@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {Colors, Sizing, Typography} from 'styles';
-import {TouchableOpacity} from '@gorhom/bottom-sheet';
 
 import moment from 'moment';
 
@@ -24,11 +23,6 @@ const RenderEmptyDate = ({day, handlePresentModalPress}) => {
   const date = day ? moment(day).format('YYYY:MM:DD') : 'no Date';
   return (
     <View style={styles.emptyDate}>
-      <Button
-        onPress={handlePresentModalPress}
-        title="Present Modal"
-        color="black"
-      />
       <Text style={styles.text}>{date}</Text>
       <Text style={{...Typography.header.x30, color: Colors.primary.brand}}>
         No Booking

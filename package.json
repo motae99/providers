@@ -84,6 +84,7 @@
     "react-native-segmented-control-tab": "^3.4.1",
     "react-native-select-two": "^1.1.0",
     "react-native-shared-element": "^0.7.0",
+    "react-native-splash-screen": "^3.2.0",
     "react-native-svg": "^12.1.0",
     "react-native-toast-message": "^1.4.9",
     "react-native-typography": "^1.4.1",
@@ -96,6 +97,7 @@
     "react-navigation-shared-element": "^3.0.0",
     "react-navigation-stack": "^2.3.11",
     "rn-credit-card": "^0.1.7",
+    "victory-native": "^35.3.3",
     "xdate": "^0.8.2",
     "yup": "^0.32.9"
   },

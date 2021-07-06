@@ -1,6 +1,14 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+import {Colors} from 'styles';
+import IncomeSummary from './components/incomeSummary';
 import Graph from './graph';
 import Footer from './components/footer';
 import NavBar from './components/navBar';
@@ -12,7 +20,7 @@ import Background from 'assets/svg/background';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'white',
+    backgroundColor: Colors.neutral.s100,
     // justifyContent: 'space-between',
   },
 });
@@ -20,13 +28,21 @@ const styles = StyleSheet.create({
 const Rainbow = () => {
   return (
     <View style={styles.container}>
-      <Background>
-        {/* <View style={{height: 150, width: 400}} /> */}
+      {/* <View style={{position: 'absolute', top: 0, right: 0}}>
+        <Background />
+      </View> */}
 
-        {/* <Graph /> */}
-        {/* <Progress /> */}
-        <Gouge />
-      </Background>
+      {/* <View style={{height: 150, width: 400}} /> */}
+
+      {/* <Progress /> */}
+      {/* <Gouge /> */}
+      {/* </Background> */}
+      {/* <View style={StyleSheet.absoluteFillObject}>
+
+      </View> */}
+      {/* <IncomeSummary /> */}
+      <Graph />
+      <Gouge />
     </View>
   );
 };

@@ -1,166 +1,428 @@
-// /* eslint-disable react-hooks/exhaustive-deps */
-// import React from 'react';
-// import {View, Text} from 'react-native';
-
-// import {SafeAreaProvider} from 'react-native-safe-area-context';
-// import Toast from 'react-native-toast-message';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React from 'react';
+import {View, Text} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 // import Navigator from 'navigation';
 // import Services from 'utils/services';
-// import Payments from 'stacks/payments';
-// import {Reflectly, ColorSelection} from 'stacks/tabs';
+import SplashScreen from 'react-native-splash-screen';
 
-// // import codePush from 'react-native-code-push';
-// // const codePushOptions = {
-// //   updateDialog: true,
-// //   checkFrequency: codePush.CheckFrequency.ON_APP_START,
-// //   installMode: codePush.InstallMode.IMMEDIATE,
-// // };
+import codePush from 'react-native-code-push';
+const codePushOptions = {
+  updateDialog: true,
+  checkFrequency: codePush.CheckFrequency.ON_APP_START,
+  installMode: codePush.InstallMode.IMMEDIATE,
+};
 
-// const App = ({props}) => {
-//   return (
-//     <SafeAreaProvider>
-//       {/* <Services />
-//       <Navigator /> */}
-//       <Payments />
-//       {/* <ColorSelection /> */}
-//       {/* <Reflectly /> */}
-//       {/* <View
-//         style={{
-//           justifyContent: 'center',
-//           alignItems: 'center',
-//           backgroundColor: 'green',
-//           flex: 1,
-//         }}>
-//         <Text style={{color: 'white'}}>
-//           Update Now this is a simple fix for now
-//         </Text>
-//       </View> */}
-
-//       <Toast ref={ref => Toast.setRef(ref)} />
-//     </SafeAreaProvider>
-//   );
-// };
-
-// export default codePush(codePushOptions)(App);
-
-// export default App;
-import * as React from 'react';
-import {
-  Easing,
-  TextInput,
-  Animated,
-  Text,
-  View,
-  StyleSheet,
-} from 'react-native';
-// import Constants from 'expo-constants';
-import Svg, {G, Circle, Rect} from 'react-native-svg';
-
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-
-const Donut = ({
-  percentage = 75,
-  radius = 40,
-  strokeWidth = 10,
-  duration = 500,
-  color = 'tomato',
-  delay = 0,
-  textColor,
-  max = 100,
-}) => {
-  const animated = React.useRef(new Animated.Value(0)).current;
-  const circleRef = React.useRef();
-  const inputRef = React.useRef();
-  const circumference = 2 * Math.PI * radius;
-  const halfCircle = radius + strokeWidth;
-
-  const animation = toValue => {
-    return Animated.timing(animated, {
-      delay: 1000,
-      toValue,
-      duration,
-      useNativeDriver: true,
-      easing: Easing.out(Easing.ease),
-    }).start(() => {
-      animation(toValue === 0 ? percentage : 0);
-    });
-  };
-
+const App = ({props}) => {
   React.useEffect(() => {
-    animation(percentage);
-    animated.addListener(
-      v => {
-        const maxPerc = (100 * v.value) / max;
-        const strokeDashoffset =
-          circumference - (circumference * maxPerc) / 100;
-        if (inputRef?.current) {
-          inputRef.current.setNativeProps({
-            text: `${Math.round(v.value)}`,
-          });
-        }
-        if (circleRef?.current) {
-          circleRef.current.setNativeProps({
-            strokeDashoffset,
-          });
-        }
-      },
-      [max, percentage],
-    );
-
-    return () => {
-      animated.removeAllListeners();
-    };
+    console.log('splashHide');
+    SplashScreen.hide();
   });
-
   return (
-    <View style={{width: radius * 2, height: radius * 2}}>
-      <Svg
-        height={radius * 2}
-        width={radius * 2}
-        viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}>
-        <G rotation="-90" origin={`${halfCircle}, ${halfCircle}`}>
-          <Circle
-            ref={circleRef}
-            cx="50%"
-            cy="50%"
-            r={radius}
-            fill="transparent"
-            stroke={color}
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            strokeDashoffset={circumference}
-            strokeDasharray={circumference}
-          />
-          <Circle
-            cx="50%"
-            cy="50%"
-            r={radius}
-            fill="transparent"
-            stroke={color}
-            strokeWidth={strokeWidth}
-            strokeLinejoin="round"
-            strokeOpacity=".1"
-          />
-        </G>
-      </Svg>
-      <AnimatedTextInput
-        ref={inputRef}
-        underlineColorAndroid="transparent"
-        editable={false}
-        defaultValue="0"
-        style={[
-          StyleSheet.absoluteFillObject,
-          {fontSize: radius / 2, color: textColor ?? color},
-          styles.text,
-        ]}
-      />
-    </View>
+    <SafeAreaProvider>
+      {/* <Services />
+      <Navigator /> */}
+
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'green',
+          flex: 1,
+        }}>
+        <Text style={{color: 'white'}}>
+          Update Now this is a simple fix for now
+        </Text>
+      </View>
+
+      <Toast ref={ref => Toast.setRef(ref)} />
+    </SafeAreaProvider>
   );
 };
 
-const styles = StyleSheet.create({
-  text: {fontWeight: '900', textAlign: 'center'},
-});
+export default codePush(codePushOptions)(App);
 
-export default Donut;
+// export default App;
+
+// import React, {Component} from 'react';
+// import {
+//   Alert,
+//   KeyboardAvoidingView,
+//   Platform,
+//   StyleSheet,
+//   Text,
+//   TextInput,
+//   TouchableHighlight,
+//   View,
+// } from 'react-native';
+// import SegmentedControlTab from 'react-native-segmented-control-tab';
+// import * as Keychain from 'react-native-keychain';
+
+// const ACCESS_CONTROL_OPTIONS = ['None', 'Passcode', 'Password'];
+// const ACCESS_CONTROL_OPTIONS_ANDROID = ['None'];
+// const ACCESS_CONTROL_MAP = [
+//   null,
+//   Keychain.ACCESS_CONTROL.DEVICE_PASSCODE,
+//   Keychain.ACCESS_CONTROL.APPLICATION_PASSWORD,
+//   Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
+// ];
+// const ACCESS_CONTROL_MAP_ANDROID = [
+//   null,
+//   Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
+// ];
+// const SECURITY_LEVEL_OPTIONS = ['Any', 'Software', 'Hardware'];
+// const SECURITY_LEVEL_MAP = [
+//   Keychain.SECURITY_LEVEL.ANY,
+//   Keychain.SECURITY_LEVEL.SECURE_SOFTWARE,
+//   Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+// ];
+
+// const SECURITY_STORAGE_OPTIONS = ['Best', 'FB', 'AES', 'RSA'];
+// const SECURITY_STORAGE_MAP = [
+//   null,
+//   Keychain.STORAGE_TYPE.FB,
+//   Keychain.STORAGE_TYPE.AES,
+//   Keychain.STORAGE_TYPE.RSA,
+// ];
+
+// export default class KeychainExample extends Component {
+//   state = {
+//     username: '',
+//     password: '',
+//     status: '',
+//     biometryType: null,
+//     accessControl: null,
+//     securityLevel: null,
+//     storage: null,
+//   };
+
+//   componentDidMount() {
+//     Keychain.getSupportedBiometryType({}).then(biometryType => {
+//       this.setState({biometryType});
+//     });
+//   }
+
+//   async save() {
+//     try {
+//       let start = new Date();
+
+//       await Keychain.setGenericPassword(
+//         this.state.username,
+//         this.state.password,
+//         {
+//           accessControl: this.state.accessControl,
+//           securityLevel: this.state.securityLevel,
+//           storage: this.state.storageSelection,
+//         },
+//       );
+
+//       let end = new Date();
+
+//       this.setState({
+//         username: '',
+//         password: '',
+//         status: `Credentials saved! takes: ${
+//           end.getTime() - start.getTime()
+//         } millis`,
+//       });
+//     } catch (err) {
+//       this.setState({status: 'Could not save credentials, ' + err});
+//     }
+//   }
+
+//   async load() {
+//     try {
+//       const options = {
+//         authenticationPrompt: {
+//           title: 'Authentication needed',
+//           subtitle: 'Subtitle',
+//           description: 'Some descriptive text',
+//           cancel: 'Cancel',
+//         },
+//       };
+//       const credentials = await Keychain.getGenericPassword(options);
+//       if (credentials) {
+//         this.setState({...credentials, status: 'Credentials loaded!'});
+//       } else {
+//         this.setState({status: 'No credentials stored.'});
+//       }
+//     } catch (err) {
+//       this.setState({status: 'Could not load credentials. ' + err});
+//     }
+//   }
+
+//   async reset() {
+//     try {
+//       await Keychain.resetGenericPassword();
+//       this.setState({
+//         status: 'Credentials Reset!',
+//         username: '',
+//         password: '',
+//       });
+//     } catch (err) {
+//       this.setState({status: 'Could not reset credentials, ' + err});
+//     }
+//   }
+
+//   async getAll() {
+//     try {
+//       const result = await Keychain.getAllGenericPasswordServices();
+//       this.setState({
+//         status: `All keys successfully fetched! Found: ${result.length} keys.`,
+//       });
+//     } catch (err) {
+//       this.setState({status: 'Could not get all keys. ' + err});
+//     }
+//   }
+
+//   async ios_specifics() {
+//     try {
+//       const reply = await Keychain.setSharedWebCredentials(
+//         'server',
+//         'username',
+//         'password',
+//       );
+//       console.log(`setSharedWebCredentials: ${JSON.stringify(reply)}`);
+//     } catch (err) {
+//       Alert.alert('setSharedWebCredentials error', err.message);
+//     }
+
+//     try {
+//       const reply = await Keychain.requestSharedWebCredentials();
+//       console.log(`requestSharedWebCredentials: ${JSON.stringify(reply)}`);
+//     } catch (err) {
+//       Alert.alert('requestSharedWebCredentials error', err.message);
+//     }
+//   }
+
+//   render() {
+//     const VALUES =
+//       Platform.OS === 'ios'
+//         ? ACCESS_CONTROL_OPTIONS
+//         : ACCESS_CONTROL_OPTIONS_ANDROID;
+//     const AC_MAP =
+//       Platform.OS === 'ios' ? ACCESS_CONTROL_MAP : ACCESS_CONTROL_MAP_ANDROID;
+//     const SL_MAP = Platform.OS === 'ios' ? [] : SECURITY_LEVEL_MAP;
+//     const ST_MAP = Platform.OS === 'ios' ? [] : SECURITY_STORAGE_MAP;
+
+//     return (
+//       <KeyboardAvoidingView
+//         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+//         style={styles.container}>
+//         <View style={styles.content}>
+//           <Text style={styles.title}>Keychain Example</Text>
+//           <View style={styles.field}>
+//             <Text style={styles.label}>Username</Text>
+//             <TextInput
+//               style={styles.input}
+//               autoCapitalize="none"
+//               value={this.state.username}
+//               onSubmitEditing={() => {
+//                 this.passwordTextInput.focus();
+//               }}
+//               onChange={event =>
+//                 this.setState({username: event.nativeEvent.text})
+//               }
+//               underlineColorAndroid="transparent"
+//               blurOnSubmit={false}
+//               returnKeyType="next"
+//             />
+//           </View>
+//           <View style={styles.field}>
+//             <Text style={styles.label}>Password</Text>
+//             <TextInput
+//               style={styles.input}
+//               password={true}
+//               autoCapitalize="none"
+//               value={this.state.password}
+//               ref={input => {
+//                 this.passwordTextInput = input;
+//               }}
+//               onChange={event =>
+//                 this.setState({password: event.nativeEvent.text})
+//               }
+//               underlineColorAndroid="transparent"
+//             />
+//           </View>
+//           <View style={styles.field}>
+//             <Text style={styles.label}>Access Control</Text>
+//             <SegmentedControlTab
+//               selectedIndex={this.state.selectedIndex}
+//               values={
+//                 this.state.biometryType
+//                   ? [...VALUES, this.state.biometryType]
+//                   : VALUES
+//               }
+//               onTabPress={index =>
+//                 this.setState({
+//                   ...this.state,
+//                   accessControl: AC_MAP[index],
+//                   selectedIndex: index,
+//                 })
+//               }
+//             />
+//           </View>
+//           {Platform.OS === 'android' && (
+//             <View style={styles.field}>
+//               <Text style={styles.label}>Security Level</Text>
+//               <SegmentedControlTab
+//                 selectedIndex={this.state.selectedSecurityIndex}
+//                 values={SECURITY_LEVEL_OPTIONS}
+//                 onTabPress={index =>
+//                   this.setState({
+//                     ...this.state,
+//                     securityLevel: SL_MAP[index],
+//                     selectedSecurityIndex: index,
+//                   })
+//                 }
+//               />
+
+//               <Text style={styles.label}>Storage</Text>
+//               <SegmentedControlTab
+//                 selectedIndex={this.state.selectedStorageIndex}
+//                 values={SECURITY_STORAGE_OPTIONS}
+//                 onTabPress={index =>
+//                   this.setState({
+//                     ...this.state,
+//                     storageSelection: ST_MAP[index],
+//                     selectedStorageIndex: index,
+//                   })
+//                 }
+//               />
+//             </View>
+//           )}
+//           {!!this.state.status && (
+//             <Text style={styles.status}>{this.state.status}</Text>
+//           )}
+
+//           <View style={styles.buttons}>
+//             <TouchableHighlight
+//               onPress={() => this.save()}
+//               style={styles.button}>
+//               <View style={styles.save}>
+//                 <Text style={styles.buttonText}>Save</Text>
+//               </View>
+//             </TouchableHighlight>
+
+//             <TouchableHighlight
+//               onPress={() => this.load()}
+//               style={styles.button}>
+//               <View style={styles.load}>
+//                 <Text style={styles.buttonText}>Load</Text>
+//               </View>
+//             </TouchableHighlight>
+
+//             <TouchableHighlight
+//               onPress={() => this.reset()}
+//               style={styles.button}>
+//               <View style={styles.reset}>
+//                 <Text style={styles.buttonText}>Reset</Text>
+//               </View>
+//             </TouchableHighlight>
+//           </View>
+
+//           <View style={[styles.buttons, styles.centerButtons]}>
+//             <TouchableHighlight
+//               onPress={() => this.getAll()}
+//               style={styles.button}>
+//               <View style={styles.load}>
+//                 <Text style={styles.buttonText}>Get Used Keys</Text>
+//               </View>
+//             </TouchableHighlight>
+//             {Platform.OS === 'android' && (
+//               <TouchableHighlight
+//                 onPress={async () => {
+//                   const level = await Keychain.getSecurityLevel();
+//                   Alert.alert('Security Level', level);
+//                 }}
+//                 style={styles.button}>
+//                 <View style={styles.load}>
+//                   <Text style={styles.buttonText}>Get security level</Text>
+//                 </View>
+//               </TouchableHighlight>
+//             )}
+//             {Platform.OS === 'ios' && (
+//               <TouchableHighlight
+//                 onPress={() => this.ios_specifics()}
+//                 style={styles.button}>
+//                 <View style={styles.load}>
+//                   <Text style={styles.buttonText}>Test Other APIs</Text>
+//                 </View>
+//               </TouchableHighlight>
+//             )}
+//           </View>
+//         </View>
+//       </KeyboardAvoidingView>
+//     );
+//   }
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     backgroundColor: '#F5FCFF',
+//   },
+//   content: {
+//     marginHorizontal: 20,
+//   },
+//   title: {
+//     fontSize: 28,
+//     fontWeight: '200',
+//     textAlign: 'center',
+//     marginBottom: 20,
+//   },
+//   field: {
+//     marginVertical: 5,
+//   },
+//   label: {
+//     fontWeight: '500',
+//     fontSize: 15,
+//     marginBottom: 5,
+//   },
+//   input: {
+//     color: '#000',
+//     borderWidth: StyleSheet.hairlineWidth,
+//     borderColor: '#ccc',
+//     backgroundColor: 'white',
+//     height: 32,
+//     fontSize: 14,
+//     padding: 8,
+//   },
+//   status: {
+//     color: '#333',
+//     fontSize: 12,
+//     marginTop: 15,
+//   },
+//   biometryType: {
+//     color: '#333',
+//     fontSize: 12,
+//     marginTop: 15,
+//   },
+//   buttons: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     marginTop: 20,
+//   },
+//   button: {
+//     borderRadius: 3,
+//     padding: 2,
+//     overflow: 'hidden',
+//   },
+//   save: {
+//     backgroundColor: '#0c0',
+//   },
+//   load: {
+//     backgroundColor: '#333',
+//   },
+//   reset: {
+//     backgroundColor: '#c00',
+//   },
+//   buttonText: {
+//     color: 'white',
+//     fontSize: 14,
+//     paddingHorizontal: 16,
+//     paddingVertical: 8,
+//   },
+// });

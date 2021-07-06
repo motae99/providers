@@ -5,6 +5,7 @@ import { Dimensions } from "react-native";
 import { parse } from "react-native-redash";
 
 import data from "./data.json";
+// import data from "./data.json";
 const MARGIN  = 20
 export const SIZE = Dimensions.get("window").width ;
 
@@ -15,7 +16,7 @@ interface Amount {
 }
 
 interface PercentChange {
-  hour: number;
+  // hour: number;
   day: number;
   week: number;
   month: number;
@@ -38,7 +39,7 @@ interface DataPoints {
 interface Prices {
   latest: string;
   latest_price: LatestPrice;
-  hour: DataPoints;
+  // hour: DataPoints;
   day: DataPoints;
   week: DataPoints;
   month: DataPoints;
@@ -61,7 +62,7 @@ const buildGraph = (datapoints: DataPoints, label: string) => {
     .range([0, SIZE]);
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
-  const scaleY = scaleLinear().domain([minPrice, maxPrice]).range([SIZE * .6, 0]);
+  const scaleY = scaleLinear().domain([minPrice, maxPrice]).range([SIZE*.6, 0]);
   return {
     label,
     minPrice,
@@ -77,31 +78,69 @@ const buildGraph = (datapoints: DataPoints, label: string) => {
   };
 };
 
+const kantaGraph = (datapoints: DataPoints, label: string) => {
+  const priceList = datapoints.prices.slice(0, POINTS);
+  // console.log(priceList)
+  const formattedValues = priceList.map(
+    (price) => [parseFloat(price[0]), price[1]] as [number, number]
+  );
+
+  const prices = formattedValues.map((value) => value[0]);
+  
+    // console.log(prices)
+  const dates = formattedValues.map((value) => value[1]);
+  const scaleX = scaleLinear()
+    .domain([Math.min(...dates), Math.max(...dates)])
+    .range([0, SIZE]);
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  const scaleY = scaleLinear().domain([minPrice, maxPrice]).range([SIZE*.6, 0]);
+  return {
+    label,
+    minPrice,
+    maxPrice,
+    percentChange: datapoints.percent_change,
+    path: parse(
+      shape
+        .line()
+        .x(([, x]) => scaleX(x) as number)
+        .y(([y]) => scaleY(y) as number)
+        .curve(shape.curveBasis)(formattedValues) as string
+    ),
+  };
+};
+
+
 export const graphs = [
   
   {
     label: "1D",
     value: 0,
+    kantaData: kantaGraph(values.day, "Today"),
     data: buildGraph(values.day, "Today"),
   },
   {
     label: "1W",
     value: 1,
+    kantaData: kantaGraph(values.week, "This Week"),
     data: buildGraph(values.week, "This Week"),
   },
   {
     label: "1M",
     value: 2,
+    kantaData: kantaGraph(values.month, "Last Month"),
     data: buildGraph(values.month, "Last Month"),
   },
   {
     label: "1Y",
     value: 3,
+    kantaData: kantaGraph(values.year, "This Year"),
     data: buildGraph(values.year, "This Year"),
   },
   {
     label: "all",
     value: 4,
+    kantaData: kantaGraph(values.all, "All time"),
     data: buildGraph(values.all, "All time"),
   },
 ] as const;

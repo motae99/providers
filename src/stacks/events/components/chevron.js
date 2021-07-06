@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, processColor} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
-import Animated from 'react-native-reanimated';
+import {StyleSheet} from 'react-native';
+import Svg, {Path} from 'react-native-svg';
+import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import {mix, mixColor} from 'react-native-redash';
 
 const size = 30;
@@ -12,19 +12,30 @@ const styles = StyleSheet.create({
     borderRadius: size / 2,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#525251',
   },
 });
 
-export default ({transition}) => {
-  // const rotateZ = mix(transition, Math.PI, 0);
-  // const backgroundColor = mixColor(
-  //   transition,
-  //   processColor('#525251'),
-  //   processColor('#e45645'),
-  // );
+const Chevron = ({progress}) => {
+  const style = useAnimatedStyle(() => ({
+    backgroundColor: mixColor(progress.value, '#525251', '#e45645'),
+    transform: [{rotateZ: `${mix(progress.value, 0, Math.PI)}rad`}],
+  }));
   return (
-    <Animated.View style={[styles.container, {backgroundColor: '#525251'}]}>
-      <Icon name="chevron-down" color="green" size={24} />
+    <Animated.View style={[styles.container, style]}>
+      <Svg
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="white"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round">
+        <Path d="M6 9l6 6 6-6" />
+      </Svg>
     </Animated.View>
   );
 };
+
+export default Chevron;

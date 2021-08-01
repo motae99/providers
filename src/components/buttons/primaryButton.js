@@ -12,7 +12,7 @@ const Button = props => {
       onPress={props.onPress}
       onLongPress={props.onLongPress}>
       <LinearGradient
-        colors={[Colors.primary.s200, Colors.primary.brand]}
+        colors={[Colors.primary.brand, Colors.primary.s200]}
         style={props.linearstyle}>
         {props.children}
       </LinearGradient>

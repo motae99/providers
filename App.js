@@ -3,10 +3,10 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-// import Navigator from 'navigation';
-// import Services from 'utils/services';
+import Navigator from 'navigation';
+import Services from 'utils/services';
 import SplashScreen from 'react-native-splash-screen';
-
+import Offers from 'stacks/offer';
 import codePush from 'react-native-code-push';
 const codePushOptions = {
   updateDialog: true,
@@ -16,15 +16,16 @@ const codePushOptions = {
 
 const App = ({props}) => {
   React.useEffect(() => {
-    console.log('splashHide');
+    // console.log('splashHide');
     SplashScreen.hide();
   });
   return (
     <SafeAreaProvider>
-      {/* <Services />
-      <Navigator /> */}
+      {/* <Offers /> */}
+      <Services />
+      <Navigator />
 
-      <View
+      {/* <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
@@ -34,16 +35,16 @@ const App = ({props}) => {
         <Text style={{color: 'white'}}>
           Update Now this is a simple fix for now
         </Text>
-      </View>
+      </View> */}
 
       <Toast ref={ref => Toast.setRef(ref)} />
     </SafeAreaProvider>
   );
 };
 
-export default codePush(codePushOptions)(App);
+// export default codePush(codePushOptions)(App);
 
-// export default App;
+export default App;
 
 // import React, {Component} from 'react';
 // import {

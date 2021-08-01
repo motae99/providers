@@ -4,7 +4,6 @@
    <item
      android:width="200dp"
      android:height="200dp"
-     android:drawable="@drawable/icon"
      android:gravity="center" />
 </layer-list>
 <!-- 

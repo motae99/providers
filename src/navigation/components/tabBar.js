@@ -72,6 +72,11 @@ const MyTabBar = ({state, descriptors, navigation}) => {
                   marginTop: -30,
                   justifyContent: 'center',
                   alignItems: 'center',
+                  shadowColor: '#55DAEA',
+                  shadowOpacity: 1,
+                  elevation: 20,
+                  shadowRadius: 15,
+                  shadowOffset: {width: 10, height: 20},
                 }}>
                 <Feather
                   name="x"

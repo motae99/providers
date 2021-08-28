@@ -3,8 +3,8 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-import Navigator from 'navigation';
-import Services from 'utils/services';
+// import Navigator from 'navigation';
+// import Services from 'utils/services';
 import SplashScreen from 'react-native-splash-screen';
 import Offers from 'stacks/offer';
 import codePush from 'react-native-code-push';
@@ -21,9 +21,9 @@ const App = ({props}) => {
   });
   return (
     <SafeAreaProvider>
-      {/* <Offers /> */}
-      <Services />
-      <Navigator />
+      <Offers />
+      {/* <Services />
+      <Navigator /> */}
 
       {/* <View
         style={{
@@ -42,9 +42,9 @@ const App = ({props}) => {
   );
 };
 
-// export default codePush(codePushOptions)(App);
+export default codePush(codePushOptions)(App);
 
-export default App;
+// export default App;
 
 // import React, {Component} from 'react';
 // import {

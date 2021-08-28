@@ -30,16 +30,21 @@ export const neutral: Record<Neutral, string> = {
 
 type Primary = "brand" | "s200" | "s600"
 export const primary: Record<Primary, string> = {
-  s200: "#55DAEA",
-  brand: "#219CAB",
-  s600: "#0c3659",
+  s200: "rgba(143, 235, 216, .4)",
+  brand: "rgba(143, 235, 216, 1)",
+  s600: "rgba(91, 154, 168, 1)",
 }
 
 type Secondary = "brand" | "s200" | "s600"
 export const secondary: Record<Secondary, string> = {
-  s200: "#b968e8",
-  brand: "#591282",
-  s600: "#3f0d5c",
+  s200: "rgba(91, 154, 168, 1)",
+  brand: "rgba(115, 42, 167, 1)",
+  s600: "rgba(115, 42, 167, 1)",
+}
+
+type Middle = "s400"
+export const middle: Record<Middle, string> = {
+  s400: "rgba(237, 200, 54, 1)",
 }
 
 type Danger = "s400"
@@ -57,7 +62,7 @@ export const warning: Record<Warning, string> = {
   s400: "#cf9700",
 }
 
-const applyOpacity = (hexColor: string, opacity: number): string => {
+export const applyOpacity = (hexColor: string, opacity: number): string => {
   const red = parseInt(hexColor.slice(1, 3), 16)
   const green = parseInt(hexColor.slice(3, 5), 16)
   const blue = parseInt(hexColor.slice(5, 7), 16)
@@ -71,3 +76,5 @@ export const transparent: Record<Transparent, string> = {
   lightGray: applyOpacity(neutral.s300, 0.4),
   darkGray: applyOpacity(neutral.s800, 0.8),
 }
+
+
